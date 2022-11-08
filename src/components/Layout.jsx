@@ -4,6 +4,7 @@ import { BsSun, BsFillMoonFill } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleTheme } from '../redux/theme/themeSlice';
 import { NavMenu } from './NavMenu';
+import { NavLikes } from './NavLikes';
 
 const Layout = () => {
   const { darkTheme } = useSelector((state) => state);
@@ -22,14 +23,17 @@ const Layout = () => {
             <NavMenu />
           </div>
           <div className="flex items-center lg:order-2">
+            <NavLikes />
             {!darkTheme ? (
               <BsFillMoonFill
                 onClick={() => onToggle()}
+                size={20}
                 className="hover:opacity-50 cursor-pointer"
               />
             ) : (
               <BsSun
                 onClick={() => onToggle()}
+                size={20}
                 className="hover:opacity-50 cursor-pointer"
               />
             )}

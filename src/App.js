@@ -5,6 +5,9 @@ import Layout from './components/Layout';
 import Home from './pages/Home';
 import Voting from './pages/Voting';
 import Breeds from './pages/Breeds';
+import Likes from './pages/Likes';
+import Favourites from './pages/Favourites';
+import Dislikes from './pages/Dislikes';
 
 function App() {
   const { darkTheme } = useSelector((state) => state);
@@ -16,6 +19,9 @@ function App() {
           <Route index element={<Home />} />
           <Route path="/voting" element={<Voting />} />
           <Route path="/breeds" element={<Breeds />} />
+          <Route path="/likes" element={<Likes />} />
+          <Route path="/favourites" element={<Favourites />} />
+          <Route path="/dislikes" element={<Dislikes />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

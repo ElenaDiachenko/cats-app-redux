@@ -1,7 +1,18 @@
-import React from 'react';
+import { useState } from 'react';
+import { Searchbar } from '../components/Searchbar';
 
 const Breeds = () => {
-  return <div>Breeds</div>;
+  const [query, setQuery] = useState('');
+
+  const getQuery = (searchQuery) => {
+    setQuery(searchQuery);
+  };
+  console.log(query);
+  return (
+    <>
+      <Searchbar getQuery={getQuery} />
+    </>
+  );
 };
 
 export default Breeds;

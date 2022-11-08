@@ -6,18 +6,33 @@ import { requests } from '../servises/API';
 const Breeds = () => {
   const [query, setQuery] = useState('');
   const [breeds, setBreeds] = useState([]);
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(0);
+  const [breedById, setBreedById] = useState([]);
 
   useEffect(() => {
     (async () => {
       try {
         const res = await requests.getBreeds();
         setBreeds(res.data);
+        console.log('breeds');
       } catch (error) {
         console.log(error.message);
       }
     })();
   }, []);
+
+  useEffect(() => {
+    if (query.length === 0) return;
+    (async () => {
+      try {
+        const res = await requests.getBreedById(query, limit);
+        setBreedById(res.data);
+        console.log('breedById');
+      } catch (error) {
+        console.log(error.message);
+      }
+    })();
+  }, [query, limit]);
 
   const getQuery = (searchQuery) => {
     setQuery(searchQuery);
@@ -31,6 +46,17 @@ const Breeds = () => {
         options={breeds}
         onChange={getQuery}
         value={query}
+      />
+      <Select
+        value={limit}
+        onChange={(value) => setLimit(value)}
+        defaultValue="Limit"
+        options={[
+          { id: 5, name: '5' },
+          { id: 10, name: '10' },
+          { id: 15, name: '15' },
+          { id: 20, name: '20' },
+        ]}
       />
     </section>
   );

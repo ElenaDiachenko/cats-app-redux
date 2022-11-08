@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Searchbar } from '../components/Searchbar';
+import { Select } from '../components/Select';
 import { requests } from '../servises/API';
 
 const Breeds = () => {
   const [query, setQuery] = useState('');
   const [breeds, setBreeds] = useState([]);
+  const [limit, setLimit] = useState(10);
 
   useEffect(() => {
     (async () => {
@@ -22,20 +24,15 @@ const Breeds = () => {
   };
 
   return (
-    <>
+    <section className="md:flex md:items-center w-full gap-x-4">
       <Searchbar getQuery={getQuery} />
-
-      <select>
-        <option disabled value="">
-          Breeds
-        </option>
-        {breeds.map((option) => (
-          <option key={option.id} value={option.name}>
-            {option.name}
-          </option>
-        ))}
-      </select>
-    </>
+      <Select
+        defaultValue="All Breeds"
+        options={breeds}
+        onChange={getQuery}
+        value={query}
+      />
+    </section>
   );
 };
 

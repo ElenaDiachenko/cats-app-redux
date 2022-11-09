@@ -8,6 +8,7 @@ import Breeds from './pages/Breeds';
 import Likes from './pages/Likes';
 import Favourites from './pages/Favourites';
 import Dislikes from './pages/Dislikes';
+import BreedDetails from './pages/BreedDetails';
 
 function App() {
   const { darkTheme } = useSelector((state) => state);
@@ -19,6 +20,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="/voting" element={<Voting />} />
           <Route path="/breeds" element={<Breeds />} />
+          <Route path="/breeds/:id" element={<BreedDetails />} />
           <Route path="/likes" element={<Likes />} />
           <Route path="/favourites" element={<Favourites />} />
           <Route path="/dislikes" element={<Dislikes />} />

@@ -11,7 +11,7 @@ export const Select = ({ defaultValue, options, value, onChange }) => {
       >
         <option value="">{defaultValue}</option>
         {options.map((option) => (
-          <option key={option.id} value={option.id}>
+          <option key={option.id} value={option.name}>
             {option.name}
           </option>
         ))}

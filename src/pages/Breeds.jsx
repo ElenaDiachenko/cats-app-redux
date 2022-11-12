@@ -5,17 +5,19 @@ import { requests } from '../servises/API';
 import { MasonryGallery } from '../components/MasonryGallery';
 
 const Breeds = () => {
-  const [images, setImages] = useState([]);
+  // const [images, setImages] = useState([]);
   const [query, setQuery] = useState('');
   const [breeds, setBreeds] = useState([]);
   const [limit, setLimit] = useState();
-  const [breedById, setBreedById] = useState([]);
+  const [shownPhotos, setShownPhotos] = useState([]);
+  // const [breedById, setBreedById] = useState([]);
 
   useEffect(() => {
     (async () => {
       try {
         const res = await requests.getBreeds();
         setBreeds(res.data);
+        console.log(res.data);
       } catch (error) {
         console.log(error.message);
       }
@@ -23,36 +25,48 @@ const Breeds = () => {
   }, []);
 
   useEffect(() => {
-    (async () => {
-      try {
-        const res = await requests.getImages(limit);
-        setImages(res.data);
-      } catch (error) {
-        console.log(error.message);
-      }
-    })();
-  }, [limit]);
-
-  useEffect(() => {
-    if (query.length === 0) return;
-    (async () => {
-      try {
-        const res = await requests.getBreedById(query, limit);
-        setBreedById(res.data);
-      } catch (error) {
-        console.log(error.message);
-      }
-    })();
-  }, [query, limit]);
-
-  const getInputQuery = async (searchQuery) => {
-    if (searchQuery && breeds.length > 0) {
-      const query = await breeds.find(
-        (breed) => breed.name.toLowerCase() === searchQuery,
-      );
-      setQuery(query.id);
-      console.log(query);
+    if (breeds.length === 0 && query === '') return;
+    if (query === '') {
+      setShownPhotos(breeds);
+      return;
     }
+    console.log(query);
+    const result = breeds.filter((breed) => breed.name.toLowerCase() === query);
+    setShownPhotos(result);
+  }, [query, breeds]);
+
+  // const getBreedToShow = (query) => {
+  //   if (breeds.length < 0) return;
+  //   if (query === '') return breeds;
+  //   return breeds.filter((breed) => breed.name.toLowerCase() === query);
+  // };
+
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       const res = await requests.getImages(limit);
+  //       setImages(res.data);
+  //     } catch (error) {
+  //       console.log(error.message);
+  //     }
+  //   })();
+  // }, [limit]);
+
+  // useEffect(() => {
+  //   if (query.length === 0) return;
+  //   (async () => {
+  //     try {
+  //       const res = await requests.getBreedById(query, limit);
+  //       setBreedById(res.data);
+  //     } catch (error) {
+  //       console.log(error.message);
+  //     }
+  //   })();
+  // }, [query, limit]);
+
+  const getInputQuery = (searchQuery) => {
+    setQuery(searchQuery);
+    console.log(query);
   };
 
   return (
@@ -77,10 +91,8 @@ const Breeds = () => {
           ]}
         />
       </section>
-      {images.length > 0 && !breedById.length > 0 && (
-        <MasonryGallery photos={images} />
-      )}
-      {breedById.length > 0 && <MasonryGallery photos={breedById} />}
+      {breeds.length > 0 && <MasonryGallery photos={shownPhotos} />}
+      {/* {breedById.length > 0 && <MasonryGallery photos={breedById} />} */}
     </>
   );
 };

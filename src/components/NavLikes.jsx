@@ -6,12 +6,15 @@ import { CgSmileSad } from 'react-icons/cg';
 import { FaRegHeart } from 'react-icons/fa';
 
 export const NavLikes = () => {
-  const activeClassName = 'bg-red-500 p-1 rounded';
+  const activeClassName =
+    'bg-red-500 p-1.5 rounded flex justify-center items-center';
   return (
     <div className="flex gap-x-4 mr-2">
       <NavLink
         className={({ isActive }) =>
-          isActive ? activeClassName : 'p-1 rounded'
+          isActive
+            ? activeClassName
+            : 'p-1.5 rounded flex justify-center items-center'
         }
         to="/likes"
       >
@@ -19,7 +22,9 @@ export const NavLikes = () => {
       </NavLink>
       <NavLink
         className={({ isActive }) =>
-          isActive ? activeClassName : 'p-1 rounded'
+          isActive
+            ? activeClassName
+            : 'p-1.5 rounded flex justify-center items-center'
         }
         to="/favourites"
       >
@@ -27,7 +32,9 @@ export const NavLikes = () => {
       </NavLink>
       <NavLink
         className={({ isActive }) =>
-          isActive ? activeClassName : 'p-1 rounded'
+          isActive
+            ? activeClassName
+            : 'p-.1.5 rounded flex justify-center items-center'
         }
         to="/dislikes"
       >

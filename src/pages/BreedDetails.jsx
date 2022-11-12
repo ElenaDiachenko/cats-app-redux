@@ -5,28 +5,27 @@ import { MdArrowBackIosNew } from 'react-icons/md';
 
 const BreedDetails = () => {
   const { id } = useParams();
-  const [breed, setBreed] = useState({});
-  const param = useParams();
-  console.log(param);
+  const [breeds, setBreeds] = useState([]);
+
   useEffect(() => {
     (async () => {
       try {
-        const res = await requests.getBreedDetails(id);
-        setBreed(res.data);
+        const res = await requests.getBreedById(id);
+        setBreeds(res.data);
       } catch (error) {
         console.log(error.message);
       }
     })();
   }, [id]);
 
-  console.log(breed);
+  console.log(breeds);
   return (
     <div className="flex flex-col gap-y-4">
       <div className="flex gap-x-4 items-center">
-        <MdArrowBackIosNew />
+        <MdArrowBackIosNew className="font-bold" />
         <p>Breed</p>
-        <p>{id}</p>
       </div>
+      <div>{/* <img src={breed.url} alt="/" /> */}</div>
     </div>
   );
 };

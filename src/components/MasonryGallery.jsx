@@ -9,6 +9,19 @@ export const MasonryGallery = ({ photos }) => {
     >
       <Masonry gutter="20px">
         {photos.map((photo) => (
+          <div key={photo.id}>
+            <Link to={`/breeds/${photo.id}`}>
+              <img
+                className="rounded"
+                id={photo.id}
+                src={photo?.url}
+                style={{ width: '100%', display: 'block' }}
+                alt=""
+              />
+            </Link>
+          </div>
+        ))}
+        {/* {photos.map((photo) => (
           <div key={photo.reference_image_id ?? photo.id}>
             <Link to={`/breeds/${photo.reference_image_id ?? photo.id}`}>
               <img
@@ -20,7 +33,7 @@ export const MasonryGallery = ({ photos }) => {
               />
             </Link>
           </div>
-        ))}
+        ))} */}
       </Masonry>
     </ResponsiveMasonry>
   );

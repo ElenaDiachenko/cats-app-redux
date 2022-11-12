@@ -5,9 +5,10 @@ import { requests } from '../servises/API';
 import { MasonryGallery } from '../components/MasonryGallery';
 
 const Breeds = () => {
+  const [images, setImages] = useState([]);
   const [query, setQuery] = useState('');
   const [breeds, setBreeds] = useState([]);
-  const [limit, setLimit] = useState('5');
+  const [limit, setLimit] = useState();
   const [breedById, setBreedById] = useState([]);
 
   useEffect(() => {
@@ -22,22 +23,42 @@ const Breeds = () => {
   }, []);
 
   useEffect(() => {
+    (async () => {
+      try {
+        const res = await requests.getImages(limit);
+        setImages(res.data);
+      } catch (error) {
+        console.log(error.message);
+      }
+    })();
+  }, [limit]);
+
+  useEffect(() => {
     if (query.length === 0) return;
     (async () => {
       try {
         const res = await requests.getBreedById(query, limit);
         setBreedById(res.data);
-        console.log('breedById');
       } catch (error) {
         console.log(error.message);
       }
     })();
   }, [query, limit]);
 
+  const getInputQuery = async (searchQuery) => {
+    if (searchQuery && breeds.length > 0) {
+      const query = await breeds.find(
+        (breed) => breed.name.toLowerCase() === searchQuery,
+      );
+      setQuery(query.id);
+      console.log(query);
+    }
+  };
+
   return (
     <>
       <section className="md:flex md:items-center w-full gap-x-4">
-        <Searchbar getQuery={setQuery} />
+        <Searchbar getQuery={getInputQuery} />
         <Select
           defaultValue="All Breeds"
           value={query}
@@ -56,8 +77,8 @@ const Breeds = () => {
           ]}
         />
       </section>
-      {breeds.length > 0 && !breedById.length > 0 && (
-        <MasonryGallery photos={breeds} />
+      {images.length > 0 && !breedById.length > 0 && (
+        <MasonryGallery photos={images} />
       )}
       {breedById.length > 0 && <MasonryGallery photos={breedById} />}
     </>

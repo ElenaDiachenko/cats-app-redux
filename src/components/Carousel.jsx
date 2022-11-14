@@ -25,7 +25,7 @@ export default function SliderComponent({ images }) {
         }}
         navigation={true}
         modules={[Autoplay, Pagination, Navigation]}
-        className="mySwiper w-full md:max-w-[900px] h-[70vh]"
+        className="mySwiper w-full h-[80vh]"
       >
         {images.map((image, idx) => {
           return (

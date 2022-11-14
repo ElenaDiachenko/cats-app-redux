@@ -1,39 +1,38 @@
 import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { getSelectedBreed } from '../redux/breed/breedsSlice';
 import { Searchbar } from '../components/Searchbar';
 import { Select } from '../components/Select';
 import { requests } from '../servises/API';
 import { MasonryGallery } from '../components/MasonryGallery';
 
 const Breeds = () => {
-  // const [images, setImages] = useState([]);
+  const dispatch = useDispatch();
   const [query, setQuery] = useState('');
   const [breeds, setBreeds] = useState([]);
   const [limit, setLimit] = useState();
   const [shownPhotos, setShownPhotos] = useState([]);
-  // const [breedById, setBreedById] = useState([]);
 
   useEffect(() => {
     (async () => {
       try {
         const res = await requests.getBreeds();
         setBreeds(res.data);
-        console.log(res.data);
       } catch (error) {
         console.log(error.message);
       }
     })();
   }, []);
-
   useEffect(() => {
     if (breeds.length === 0 && query === '') return;
     if (query === '') {
       setShownPhotos(breeds);
       return;
     }
-    console.log(query);
     const result = breeds.filter((breed) => breed.name.toLowerCase() === query);
     setShownPhotos(result);
-  }, [query, breeds]);
+    dispatch(getSelectedBreed(result[0]));
+  }, [query, breeds, dispatch]);
 
   // const getBreedToShow = (query) => {
   //   if (breeds.length < 0) return;

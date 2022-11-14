@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { getSelectedBreed } from '../redux/breed/breedsSlice';
+import { getAllBreeds } from '../redux/breed/breedsSlice';
 import { Searchbar } from '../components/Searchbar';
 import { Select } from '../components/Select';
 import { requests } from '../servises/API';
@@ -18,11 +18,13 @@ const Breeds = () => {
       try {
         const res = await requests.getBreeds();
         setBreeds(res.data);
+        dispatch(getAllBreeds(res.data));
       } catch (error) {
         console.log(error.message);
       }
     })();
-  }, []);
+  }, [dispatch]);
+
   useEffect(() => {
     if (breeds.length === 0 && query === '') return;
     if (query === '') {
@@ -31,8 +33,7 @@ const Breeds = () => {
     }
     const result = breeds.filter((breed) => breed.name.toLowerCase() === query);
     setShownPhotos(result);
-    dispatch(getSelectedBreed(result[0]));
-  }, [query, breeds, dispatch]);
+  }, [query, breeds]);
 
   // const getBreedToShow = (query) => {
   //   if (breeds.length < 0) return;

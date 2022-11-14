@@ -3,17 +3,17 @@ import { createSlice } from '@reduxjs/toolkit';
 const breedsSlice = createSlice({
   name: 'breeds',
   initialState: {
-    selectedBreed: {},
+    allBreeds: [],
   },
   reducers: {
-    getSelectedBreed: {
+    getAllBreeds: {
       reducer(state, action) {
-        state.selectedBreed = action.payload;
+        state.allBreeds = action.payload;
       },
     },
   },
 });
 
 export const breedsReducer = breedsSlice.reducer;
-export const selectedBreed = (state) => state.breeds.selectedBreed;
-export const { getSelectedBreed } = breedsSlice.actions;
+export const allBreeds = (state) => state.breeds.allBreeds;
+export const { getAllBreeds } = breedsSlice.actions;

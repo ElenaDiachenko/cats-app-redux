@@ -1,11 +1,17 @@
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { allBreeds } from '../redux/breed/breedsSlice';
 import { useParams, useLocation } from 'react-router-dom';
 import { requests } from '../servises/API';
 import { MdArrowBackIosNew } from 'react-icons/md';
 import Carousel from '../components/Carousel';
 const BreedDetails = () => {
+  const breedsArray = useSelector(allBreeds);
   const { id } = useParams();
   const [breeds, setBreeds] = useState([]);
+  console.log(breedsArray);
+  const breedDescr = breedsArray.find((it) => it.id === id);
+  console.log(breedDescr);
 
   useEffect(() => {
     (async () => {

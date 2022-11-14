@@ -14,7 +14,6 @@ export const MasonryGallery = ({ photos }) => {
               <img
                 className="rounded w-full block"
                 src={photo?.image?.url}
-                // style={{ width: '100%', display: 'block' }}
                 alt=""
               />
               <p className="absolute bottom-0 left-0 w-full">{photo.name}</p>

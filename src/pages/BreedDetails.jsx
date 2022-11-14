@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { requests } from '../servises/API';
 import { MdArrowBackIosNew } from 'react-icons/md';
-import { Carousel } from '../components/Carousel';
+import Carousel from '../components/Carousel';
 const BreedDetails = () => {
   const { id } = useParams();
   const [breeds, setBreeds] = useState([]);
@@ -27,8 +27,9 @@ const BreedDetails = () => {
         <p>Breed</p>
       </div>
 
-      <div className="flex justify-center items-center">
+      <div className="flex justify-between ">
         <Carousel images={breeds} />
+        <div></div>
       </div>
     </div>
   );

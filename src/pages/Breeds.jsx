@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useGetBreedsQuery } from '../redux/breed/breedsApiSlice';
 import { Searchbar } from '../components/Searchbar';
 import { Select } from '../components/Select';
-import { requests } from '../servises/API';
+// import { requests } from '../servises/API';
 import { MasonryGallery } from '../components/MasonryGallery';
 
 const Breeds = () => {

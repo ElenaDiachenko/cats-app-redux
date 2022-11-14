@@ -12,6 +12,7 @@ export const breedsApi = createApi({
     },
   }),
   tagTypes: ['Breed'],
+  refetchOnReconnect: true,
   endpoints: (builder) => ({
     getBreeds: builder.query({
       query: () => `breeds`,

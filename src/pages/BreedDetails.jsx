@@ -8,16 +8,15 @@ import { requests } from '../servises/API';
 import { MdArrowBackIosNew } from 'react-icons/md';
 import Carousel from '../components/Carousel';
 const BreedDetails = () => {
-  const { data, error, isLoading } = useGetBreedsQuery();
+  const { data, error, isLoading, isFetching } = useGetBreedsQuery();
   const location = useLocation();
-  console.log(location);
   const { id } = useParams();
   const [breeds, setBreeds] = useState([]);
-  const breedDescr = data.find((it) => it.id === id);
-  console.log(breedDescr);
+  const [breedDescr, setBreedDescr] = useState(null);
 
   useEffect(() => {
     (async () => {
+      if (!id) return;
       try {
         const res = await requests.getBreedById(id);
         setBreeds(res.data);
@@ -27,18 +26,28 @@ const BreedDetails = () => {
     })();
   }, [id]);
 
-  console.log(breeds);
+  useEffect(() => {
+    (async () => {
+      if (!data) return;
+      try {
+        const result = await data.find((it) => it.id === id);
+        setBreedDescr(result);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, [data, id]);
 
   return (
     <>
       {error && <p>Something went wrong</p>}
-      {isLoading && <p>Loading ...</p>}
-      {data && (
+      {isLoading && isFetching && <p>Loading ...</p>}
+
+      {breedDescr && (
         <div className="flex flex-col gap-y-4">
           <Link to={location.state?.from ?? '/breeds'}>
             <div className="flex gap-x-4 items-center">
               <MdArrowBackIosNew className="font-bold" />
-
               <p>Go Breed</p>
             </div>
           </Link>

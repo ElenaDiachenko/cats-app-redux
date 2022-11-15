@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
-// import { useSelector } from 'react-redux';
-// import { allBreeds } from '../redux/breed/breedsSlice';
-
 import { useParams, useLocation, Link } from 'react-router-dom';
 import { useGetBreedsQuery } from '../redux/breed/breedsApiSlice';
 import { requests } from '../servises/API';
 import { MdArrowBackIosNew } from 'react-icons/md';
 import Carousel from '../components/Carousel';
+
 const BreedDetails = () => {
   const { data, error, isLoading, isFetching } = useGetBreedsQuery();
   const location = useLocation();

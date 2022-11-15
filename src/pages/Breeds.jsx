@@ -8,7 +8,7 @@ import { Pagination } from '../components/Pagination';
 import { MasonryGallery } from '../components/MasonryGallery';
 
 const Breeds = () => {
-  const { data, error, isLoading } = useGetBreedsQuery();
+  const { data, error, isLoading, isFetching } = useGetBreedsQuery();
   console.log(data);
   const [query, setQuery] = useState('');
   const [limit, setLimit] = useState(5);
@@ -81,7 +81,7 @@ const Breeds = () => {
   return (
     <>
       {error && <p>Something went wrong</p>}
-      {isLoading && <p>Loading ...</p>}
+      {isLoading && isFetching && <p>Loading ...</p>}
       {data && (
         <>
           <section className="md:flex md:items-center w-full gap-x-4">

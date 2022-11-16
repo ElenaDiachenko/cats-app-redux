@@ -7,21 +7,22 @@ import { nanoid } from 'nanoid';
 
 const Voting = () => {
   const [currentImage, setCurrentImage] = useState({});
-  const [userId, setUserId] = useState(
+  const [userId] = useState(
     JSON.parse(localStorage.getItem('catsapi_userId')) ?? nanoid(),
   );
-  const [votesList, setVotesList] = useState([]);
   const [clicked, setClicked] = useState(false);
+  const [userActions, setUserActions] = useState([]);
+
+  useEffect(() => {
+    localStorage.setItem('catsapi_userId', JSON.stringify(userId));
+  }, [userId]);
 
   useEffect(() => {
     (async () => {
       try {
         const res = await requests.getImageToVote();
         setCurrentImage(res.data[0]);
-        const response = await requests.getVoteList(userId);
-        setVotesList(response.data);
         setClicked(false);
-        console.log(response.data);
       } catch (error) {
         console.error(error.message);
       }
@@ -29,20 +30,48 @@ const Voting = () => {
   }, [clicked, userId]);
 
   useEffect(() => {
-    localStorage.setItem('catsapi_userId', JSON.stringify(userId));
-  }, [userId]);
+    (async () => {
+      try {
+        const favouriteList = await requests.getFavourites(userId);
+        const votesList = await requests.getVoteList(userId);
+
+        const result = [...favouriteList, ...votesList];
+
+        const sortedResult = [...result].sort(
+          (a, b) =>
+            Number(new Date(b.created_at).getTime()) -
+            Number(new Date(a.created_at).getTime()),
+        );
+
+        setUserActions(sortedResult.slice(0, 10));
+      } catch (error) {
+        console.error(error.message);
+      }
+    })();
+  }, [userId, currentImage]);
 
   const handleVote = async (id, value) => {
     try {
-      // setClicked(true);
       const currentVote = {
         image_id: id,
         sub_id: userId,
         value: value,
       };
-      const res = await requests.addVote(currentVote);
+      await requests.addVote(currentVote);
       setClicked(true);
-      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleFavourite = async (id) => {
+    try {
+      const favourite = {
+        image_id: id,
+        sub_id: userId,
+      };
+      await requests.addFavourite(favourite);
+      setClicked(true);
     } catch (error) {
       console.log(error);
     }
@@ -50,7 +79,7 @@ const Voting = () => {
 
   return (
     <div className="flex flex-col gap-y-4 lg:flex lg:flex-row lg:gap-x-4">
-      <div className="relative w-full h-[70vh] lg:w-[50%]">
+      <div className="relative w-full h-[90vh] lg:w-[50%]">
         <img
           className="w-full h-full block object-cover"
           src={currentImage?.url}
@@ -65,7 +94,7 @@ const Voting = () => {
               <CiFaceSmile size={35} />
             </button>
             <button
-              onClick={() => {}}
+              onClick={() => handleFavourite(currentImage?.id)}
               className="w-[40px] h-[40px] rounded bg-red-400 flex justify-center items-center"
             >
               <FaRegHeart size={35} />
@@ -80,7 +109,42 @@ const Voting = () => {
         </div>
       </div>
       <div className=" w-full lg:w-[50%] flex  flex-col gap-y-3">
-        {votesList.length > 0 &&
+        {userActions.length > 0 &&
+          userActions.map((it) => (
+            <div
+              key={it.id}
+              className="flex  justify-between items-center p-3 rounded  bg-gray-200 dark:bg-slate-600"
+            >
+              <div className="flex gap-x-3">
+                <p className="font-bold">{it.created_at.slice(11, 16)}</p>
+                <p>
+                  Image ID: <b> {it.image_id}</b> was added to{' '}
+                  <b>
+                    {it.value === 1
+                      ? 'Likes'
+                      : it.value === -1
+                      ? 'Dislikes'
+                      : 'Favourite'}
+                  </b>
+                </p>
+              </div>
+
+              {it.value === 1 ? (
+                <div className="w-[40px] h-[40px] rounded bg-green-400 flex justify-center items-center text-white">
+                  <CiFaceSmile size={35} />
+                </div>
+              ) : it.value === -1 ? (
+                <div className="w-[40px] h-[40px] rounded bg-yellow-400 flex justify-center items-center text-white">
+                  <CgSmileSad size={35} />
+                </div>
+              ) : (
+                <div className="w-[40px] h-[40px] rounded bg-red-400 flex justify-center items-center text-white">
+                  <FaRegHeart size={35} />
+                </div>
+              )}
+            </div>
+          ))}
+        {/* {votesList.length > 0 &&
           votesList.map((it) => (
             <div
               key={it.id}
@@ -106,7 +170,7 @@ const Voting = () => {
                 </div>
               )}
             </div>
-          ))}
+          ))} */}
       </div>
     </div>
   );

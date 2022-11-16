@@ -17,14 +17,21 @@ const addVote = async (vote) => {
   return res.data;
 };
 
-const addFavourite = async (imageId) => {
-  const res = await axios.post('/favourites', imageId);
+const addFavourite = async (favourite) => {
+  const res = await axios.post('/favourites', favourite);
+  return res.data;
+};
+
+const getFavourites = async (userId) => {
+  const res = await axios.get(
+    `/favourites?sub_id=${userId}&limit=10&order=DESC`,
+  );
   return res.data;
 };
 
 const getVoteList = async (userId) => {
   const res = await axios.get(`/votes?sub_id=${userId}&limit=10&order=DESC`);
-  return res;
+  return res.data;
 };
 
 const getBreeds = async () => {
@@ -47,6 +54,7 @@ export const requests = {
   addVote,
   addFavourite,
   getVoteList,
+  getFavourites,
   getBreeds,
   getBreedById,
   getBreedDetails,

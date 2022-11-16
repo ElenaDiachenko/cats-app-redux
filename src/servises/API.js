@@ -10,6 +10,18 @@ const getImageToVote = async () => {
   return res;
 };
 
+const addVote = async (vote) => {
+  const res = await axios.post('/votes', vote);
+  return res.data;
+};
+
+//api.thecatapi.com/v1/votes?sub_id=user-123/
+
+const getVoteList = async (userId) => {
+  const res = await axios.get(`/votes?sub_id=${userId}`);
+  return res;
+};
+
 const getBreeds = async () => {
   const res = await axios.get('/breeds');
   return res;
@@ -27,6 +39,8 @@ const getBreedDetails = async (id) => {
 
 export const requests = {
   getImageToVote,
+  addVote,
+  getVoteList,
   getBreeds,
   getBreedById,
   getBreedDetails,

@@ -87,9 +87,11 @@ const Voting = () => {
               className="flex  justify-between items-center p-3 rounded  bg-gray-400 dark:bg-slate-600"
             >
               <div className="flex gap-x-3">
-                <p>{new Date(it.created_at).toJSON().slice(11, 16)}</p>
+                <p className="font-bold">
+                  {new Date(it.created_at).toJSON().slice(11, 16)}
+                </p>
                 <p>
-                  Image ID: <b> ${it.image_id}</b> was added to{' '}
+                  Image ID: <b> {it.image_id}</b> was added to{' '}
                   <b>{it.value === 1 ? 'Likes' : 'Dislikes'}</b>
                 </p>
               </div>

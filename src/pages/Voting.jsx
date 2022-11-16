@@ -18,11 +18,10 @@ const Voting = () => {
       try {
         const res = await requests.getImageToVote();
         setCurrentImage(res.data[0]);
-        console.log(res.data[0]);
         const response = await requests.getVoteList(userId);
-        setVotesList(response);
+        setVotesList(response.data);
         setClicked(false);
-        console.log(response);
+        console.log(response.data);
       } catch (error) {
         console.error(error.message);
       }
@@ -35,13 +34,14 @@ const Voting = () => {
 
   const handleVote = async (id, value) => {
     try {
-      setClicked(true);
+      // setClicked(true);
       const currentVote = {
         image_id: id,
         sub_id: userId,
         value: value,
       };
       const res = await requests.addVote(currentVote);
+      setClicked(true);
       console.log(res);
     } catch (error) {
       console.log(error);
@@ -49,8 +49,8 @@ const Voting = () => {
   };
 
   return (
-    <div className="flex flex-col gap-y-4 md:flex md:flex-row md:gap-x-4">
-      <div className="relative h-[70vh] md:w-[50%]">
+    <div className="flex flex-col gap-y-4 lg:flex lg:flex-row lg:gap-x-4">
+      <div className="relative w-full h-[70vh] lg:w-[50%]">
         <img
           className="w-full h-full block object-cover"
           src={currentImage?.url}
@@ -78,6 +78,33 @@ const Voting = () => {
             </button>
           </div>
         </div>
+      </div>
+      <div className=" w-full lg:w-[50%] flex  flex-col gap-y-3">
+        {votesList.length > 0 &&
+          votesList.map((it) => (
+            <div
+              key={it.id}
+              className="flex  justify-between items-center p-3 rounded  bg-gray-400 dark:bg-slate-600"
+            >
+              <div className="flex gap-x-3">
+                <p>{new Date(it.created_at).toJSON().slice(11, 16)}</p>
+                <p>
+                  Image ID: <b> ${it.image_id}</b> was added to{' '}
+                  <b>{it.value === 1 ? 'Likes' : 'Dislikes'}</b>
+                </p>
+              </div>
+
+              {it.value === 1 ? (
+                <div className="w-[40px] h-[40px] rounded bg-green-400 flex justify-center items-center">
+                  <CiFaceSmile size={35} />
+                </div>
+              ) : (
+                <div className="w-[40px] h-[40px] rounded bg-yellow-400 flex justify-center items-center">
+                  <CgSmileSad size={35} />
+                </div>
+              )}
+            </div>
+          ))}
       </div>
     </div>
   );

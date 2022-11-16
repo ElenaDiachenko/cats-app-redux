@@ -6,7 +6,9 @@ axios.defaults.baseURL = ` https://api.thecatapi.com/v1`;
 axios.defaults.headers.common['x-api-key'] = API_KEY;
 
 const getImageToVote = async () => {
-  const res = await axios.get(`/images/search`);
+  const res = await axios.get(`/images/search`, {
+    params: { limit: 1, size: 'full' },
+  });
   return res;
 };
 
@@ -15,10 +17,13 @@ const addVote = async (vote) => {
   return res.data;
 };
 
-//api.thecatapi.com/v1/votes?sub_id=user-123/
+const addFavourite = async (imageId) => {
+  const res = await axios.post('/favourites', imageId);
+  return res.data;
+};
 
 const getVoteList = async (userId) => {
-  const res = await axios.get(`/votes?sub_id=${userId}`);
+  const res = await axios.get(`/votes?sub_id=${userId}&limit=10&order=DESC`);
   return res;
 };
 
@@ -40,6 +45,7 @@ const getBreedDetails = async (id) => {
 export const requests = {
   getImageToVote,
   addVote,
+  addFavourite,
   getVoteList,
   getBreeds,
   getBreedById,

@@ -43,7 +43,7 @@ const BreedDetails = () => {
 
       {breedDescr && (
         <div className="flex flex-col gap-y-4">
-          <BackLink to={location.state?.from ?? '/breeds'}>Go Breeds</BackLink>
+          <BackLink to={location.state?.from ?? '/breeds'}>Go Back</BackLink>
 
           <div className="flex flex-col gap-y-3 md:flex-row md:justify-between md:gap-x-4">
             <div className=" f-full md:w-[70%] bg-slate-600 rounded p-2 md:p-3 flex justufy-center items-center">

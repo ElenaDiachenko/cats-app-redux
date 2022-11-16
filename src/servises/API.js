@@ -5,8 +5,8 @@ const API_KEY = `live_CqWfe3zoa8ucUnrhBYtcz5dvY7OOAPXZUD856Lf7C4SeVzy56bAO9ZrjP9
 axios.defaults.baseURL = ` https://api.thecatapi.com/v1`;
 axios.defaults.headers.common['x-api-key'] = API_KEY;
 
-const getImages = async (limit = 10) => {
-  const res = await axios.get(`/images/search?limit=${limit}`);
+const getImageToVote = async () => {
+  const res = await axios.get(`/images/search`);
   return res;
 };
 
@@ -26,7 +26,7 @@ const getBreedDetails = async (id) => {
 };
 
 export const requests = {
-  getImages,
+  getImageToVote,
   getBreeds,
   getBreedById,
   getBreedDetails,

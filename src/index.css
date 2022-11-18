@@ -30,11 +30,13 @@ span.swiper-pagination-bullet {
   background-color: transparent !important;
   border: none !important;
   padding: none !important;
+  box-shadow: none !important;
   height: 50px !important;
   width: 300px !important;
   color: inherit !important;
   font-size: 16px !important;
 }
+
 .custom-select__value-container {
   padding: none !important;
 }
@@ -45,20 +47,17 @@ span.swiper-pagination-bullet {
 .custom-select__indicator {
   color: inherit !important;
 }
-.custom-select__input-container {
-  color: inherit !important;
-  font: inherit !important;
-}
+.custom-select__input-container,
+.custom-select__single-value,
 .custom-select__menu {
   color: inherit !important;
-  font-size: inherit !important;
+  font: inherit !important;
   background-color: inherit !important;
 }
-.custom-select__option {
-  /* color: inherit !important;
-   font-size: 16px !important;
 
-  background-color: inherit !important; */
+.custom-select__option {
+  color: inherit !important;
+  background-color: inherit !important;
   font-size: 16px !important;
   cursor: pointer !important;
 }

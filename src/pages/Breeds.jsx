@@ -112,7 +112,7 @@ const Breeds = () => {
                 placeholder="All Breeds"
                 classNamePrefix="custom-select"
                 className="
-       focus:outline-none text-sm text-gray-900 bg-gray-50 border border-gray-300 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-600 dark:text-white"
+    focus:outline-0  font-bold text-gray-900 dark:text-white bg-gray-50 border border-gray-300 focus:border-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-100"
                 onChange={(option) => setQuery(option.value)}
               />
             )}
@@ -127,7 +127,7 @@ const Breeds = () => {
               placeholder="Limit"
               classNamePrefix="custom-select"
               className="
-       focus:outline-none text-sm text-gray-900 bg-gray-50 border border-gray-300 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+    focus:outline-0  font-bold text-gray-900 dark:text-white bg-gray-50 border border-gray-300 focus:border-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-100"
               onChange={(option) => setLimit(option.value)}
             />
             {/* {options.length > 0 && (

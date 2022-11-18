@@ -9,11 +9,14 @@ export const MasonryGallery = ({ photos }) => {
     >
       <Masonry gutter="20px">
         {photos.map((photo) => (
-          <Link to={`/breeds/${photo.id}`} key={photo.id}>
+          <Link
+            to={`/breeds/${photo.id}`}
+            key={photo.reference_image_id ?? photo.id}
+          >
             <div className="relative">
               <img
                 className="rounded w-full block"
-                src={photo?.image?.url}
+                src={photo?.image?.url ?? photo?.url}
                 alt=""
               />
               <p className="absolute bottom-0 left-0 w-full text-center rounded-b text-white bg-black/50 py-3 font-bold">

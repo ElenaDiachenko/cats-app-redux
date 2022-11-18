@@ -15,27 +15,79 @@ span.swiper-pagination-bullet {
   width: 12px !important;
   height: 12px !important;
 }
+/* block p-4 pl-10
+       focus:outline-none text-sm text-gray-900 bg-gray-50
+        border border-gray-300 focus:border-blue-500 
+        dark:bg-gray-700 dark:border-gray-600 
+        dark:placeholder-gray-400 dark:text-white" */
+
+/* .custom-select__control {
+  background-color: transparent !important;
+  border: none !important;
+} */
+
+.custom-select__control {
+  background-color: transparent !important;
+  border: none !important;
+  padding: none !important;
+  height: 50px !important;
+  width: 300px !important;
+  color: inherit !important;
+  font-size: 16px !important;
+}
+.custom-select__value-container {
+  padding: none !important;
+}
+
+.custom-select__indicator-separator {
+  display: none !important;
+}
+.custom-select__indicator {
+}
+.custom-select__input-container {
+  color: inherit !important;
+  font: inherit !important;
+}
+.custom-select__menu {
+  color: inherit !important;
+  font-size: inherit !important;
+  background-color: inherit !important;
+}
+.custom-select__option {
+  /* color: inherit !important;
+   font-size: 16px !important;
+
+  background-color: inherit !important; */
+    font-size: 16px !important;
+  cursor: pointer !important;
+}
+.custom-select__option--is-focused {
+  color: black !important;
+  background-color: grey !important;
+}
 
 .pagination-container {
   display: flex;
-  list-style-type: none;}
+  list-style-type: none;
+}
 
-  .pagination-item {
-    padding: 0 12px;
-    height: 32px;
-    text-align: center;
-    margin: auto 4px;
-    color: rgba(0, 0, 0, 0.87);
-    display: flex;
-    box-sizing: border-box;
-    align-items: center;
-    letter-spacing: 0.01071em;
-    border-radius: 16px;
-    line-height: 1.43;
-    font-size: 13px;
-    min-width: 32px;}
+.pagination-item {
+  padding: 0 12px;
+  height: 32px;
+  text-align: center;
+  margin: auto 4px;
+  color: rgba(0, 0, 0, 0.87);
+  display: flex;
+  box-sizing: border-box;
+  align-items: center;
+  letter-spacing: 0.01071em;
+  border-radius: 16px;
+  line-height: 1.43;
+  font-size: 13px;
+  min-width: 32px;
+}
 
-    /* .dots:hover {
+/* .dots:hover {
       background-color: transparent;
       cursor: default;
     
@@ -48,36 +100,35 @@ span.swiper-pagination-bullet {
       background-color: rgba(0, 0, 0, 0.08);
     }
   } */
-    .arrow::before {
-        position: relative;
-        /* top: 3pt; Uncomment this to lower the icons as requested in comments*/
-        content: '';
-        /* By using an em scale, the arrows will size with the font */
-        display: inline-block;
-        width: 0.4em;
-        height: 0.4em;
-        border-right: 0.12em solid rgba(0, 0, 0, 0.87);
-        border-top: 0.12em solid rgba(0, 0, 0, 0.87);
-      }
-    
-      .arrow.left {
-        transform: rotate(-135deg) translate(-50%);
-      }
+.arrow::before {
+  position: relative;
+  /* top: 3pt; Uncomment this to lower the icons as requested in comments*/
+  content: '';
+  /* By using an em scale, the arrows will size with the font */
+  display: inline-block;
+  width: 0.4em;
+  height: 0.4em;
+  border-right: 0.12em solid rgba(0, 0, 0, 0.87);
+  border-top: 0.12em solid rgba(0, 0, 0, 0.87);
+}
 
-      .right.right {
-        transform: rotate(45deg);
-      }
-    
+.arrow.left {
+  transform: rotate(-135deg) translate(-50%);
+}
 
-    .disabled {
-      pointer-events: none;
-    }
-      .arrow::before {
-        border-right: 0.12em solid rgba(0, 0, 0, 0.43);
-        border-top: 0.12em solid rgba(0, 0, 0, 0.43);
-      }
+.right.right {
+  transform: rotate(45deg);
+}
 
-      .arrow:hover {
-        background-color: transparent;
-        cursor: default;
-            }
+.disabled {
+  pointer-events: none;
+}
+.arrow::before {
+  border-right: 0.12em solid rgba(0, 0, 0, 0.43);
+  border-top: 0.12em solid rgba(0, 0, 0, 0.43);
+}
+
+.arrow:hover {
+  background-color: transparent;
+  cursor: default;
+}

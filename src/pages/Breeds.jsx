@@ -5,6 +5,7 @@ import Select from 'react-select';
 // import { useGetBreedsQuery } from '../redux/breed/breedsApiSlice';
 import { Searchbar } from '../components/Searchbar';
 // import { Select } from '../components/Select';
+import { usePagination } from '../hooks/usePagination';
 import { Pagination } from '../components/Pagination';
 import { MasonryGallery } from '../components/MasonryGallery';
 import { requests } from '../servises/API';
@@ -19,6 +20,7 @@ const Breeds = () => {
   const [limit, setLimit] = useState(10);
   const [shownPhotos, setShownPhotos] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const currentPhotos = usePagination(shownPhotos, limit, currentPage);
 
   useEffect(() => {
     (async () => {
@@ -92,16 +94,10 @@ const Breeds = () => {
     console.log(query);
   };
 
-  const indexOfLastPost = currentPage * limit;
-  const indexOfFirstPost = indexOfLastPost - limit;
-  const currentPhotos = shownPhotos.slice(indexOfFirstPost, indexOfLastPost);
-  // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <>
-      {error && <p>Something went wrong</p>}
-      {isLoading && <p>Loading ...</p>}
       {breeds && (
         <>
           <section className=" flex flex-col gap-y-3 md:flex-row md:items-center w-full gap-x-4">
@@ -149,6 +145,8 @@ const Breeds = () => {
               ]}
             /> */}
           </section>
+          {isLoading && <p>Loading ...</p>}
+          {error && <p>Something went wrong</p>}
 
           {currentPhotos && <MasonryGallery photos={currentPhotos} />}
 
@@ -162,7 +160,6 @@ const Breeds = () => {
           )}
         </>
       )}
-      {/* {breedById.length > 0 && <MasonryGallery photos={breedById} />} */}
     </>
   );
 };

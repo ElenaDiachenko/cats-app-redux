@@ -19,9 +19,11 @@ export const MasonryGallery = ({ photos }) => {
                 src={photo?.image?.url ?? photo?.url}
                 alt=""
               />
-              <p className="absolute bottom-0 left-0 w-full text-center rounded-b text-white bg-black/50 py-3 font-bold">
-                {photo.name}
-              </p>
+              {photo.name && (
+                <p className="absolute bottom-0 left-0 w-full text-center rounded-b text-white bg-black/50 py-3 font-bold">
+                  {photo.name}
+                </p>
+              )}
             </div>
           </Link>
         ))}

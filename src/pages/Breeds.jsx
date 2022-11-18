@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Select from 'react-select';
 // import { useDispatch } from 'react-redux';
 // import { getAllBreeds } from '../redux/breed/breedsSlice';
-import { useGetBreedsQuery } from '../redux/breed/breedsApiSlice';
+// import { useGetBreedsQuery } from '../redux/breed/breedsApiSlice';
 import { Searchbar } from '../components/Searchbar';
 // import { Select } from '../components/Select';
 import { Pagination } from '../components/Pagination';
@@ -12,6 +12,8 @@ import { requests } from '../servises/API';
 const Breeds = () => {
   // const { data, error, isLoading, isFetching } = useGetBreedsQuery();
   const [breeds, setBreeds] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [selectedBreed, setSelectedBreed] = useState([]);
   const [query, setQuery] = useState('');
   const [limit, setLimit] = useState(10);
@@ -21,10 +23,14 @@ const Breeds = () => {
   useEffect(() => {
     (async () => {
       try {
+        setIsLoading(true);
         const res = await requests.getBreeds();
         setBreeds(res.data);
       } catch (error) {
         console.log(error.message);
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
       }
     })();
   }, []);
@@ -37,10 +43,21 @@ const Breeds = () => {
     })),
   ];
 
-  console.log(query);
+  useEffect(() => {
+    if (query === 0) return;
+    (async () => {
+      try {
+        const res = await requests.getBreedById(query);
+        setSelectedBreed(res.data);
+      } catch (error) {
+        console.log(error.message);
+      }
+    })();
+  }, [query]);
 
   useEffect(() => {
     if (!breeds.length) return;
+
     if (query === '') {
       setShownPhotos(breeds);
       return;
@@ -53,7 +70,6 @@ const Breeds = () => {
     setShownPhotos(selectedBreed);
   }, [query, breeds, selectedBreed]);
 
-  console.log(shownPhotos);
   // const getBreedToShow = (query) => {
   //   if (breeds.length < 0) return;
   //   if (query === '') return breeds;
@@ -71,18 +87,6 @@ const Breeds = () => {
   //   })();
   // }, [limit]);
 
-  useEffect(() => {
-    if (query === 0) return;
-    (async () => {
-      try {
-        const res = await requests.getBreedById(query, limit);
-        setSelectedBreed(res.data);
-      } catch (error) {
-        console.log(error.message);
-      }
-    })();
-  }, [query, limit]);
-
   const getInputQuery = (searchQuery) => {
     setQuery(searchQuery);
     console.log(query);
@@ -91,14 +95,13 @@ const Breeds = () => {
   const indexOfLastPost = currentPage * limit;
   const indexOfFirstPost = indexOfLastPost - limit;
   const currentPhotos = shownPhotos.slice(indexOfFirstPost, indexOfLastPost);
-
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <>
-      {/* {error && <p>Something went wrong</p>}
-      {isLoading && isFetching && <p>Loading ...</p>} */}
+      {error && <p>Something went wrong</p>}
+      {isLoading && <p>Loading ...</p>}
       {breeds && (
         <>
           <section className="md:flex md:items-center w-full gap-x-4">
@@ -109,7 +112,7 @@ const Breeds = () => {
                 placeholder="All Breeds"
                 classNamePrefix="custom-select"
                 className="
-       focus:outline-none text-sm text-gray-900 bg-gray-50 border border-gray-300 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+       focus:outline-none text-sm text-gray-900 bg-gray-50 border border-gray-300 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-600 dark:text-white"
                 onChange={(option) => setQuery(option.value)}
               />
             )}
@@ -125,7 +128,7 @@ const Breeds = () => {
               classNamePrefix="custom-select"
               className="
        focus:outline-none text-sm text-gray-900 bg-gray-50 border border-gray-300 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-              onChange={(option) => setQuery(option.value)}
+              onChange={(option) => setLimit(option.value)}
             />
             {/* {options.length > 0 && (
               <Select
@@ -149,7 +152,7 @@ const Breeds = () => {
 
           {currentPhotos && <MasonryGallery photos={currentPhotos} />}
 
-          {shownPhotos && (
+          {shownPhotos.length > currentPhotos.length && (
             <Pagination
               limit={limit}
               total={shownPhotos.length}

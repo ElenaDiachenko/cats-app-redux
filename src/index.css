@@ -43,6 +43,7 @@ span.swiper-pagination-bullet {
   display: none !important;
 }
 .custom-select__indicator {
+  color: inherit !important;
 }
 .custom-select__input-container {
   color: inherit !important;
@@ -58,7 +59,7 @@ span.swiper-pagination-bullet {
    font-size: 16px !important;
 
   background-color: inherit !important; */
-    font-size: 16px !important;
+  font-size: 16px !important;
   cursor: pointer !important;
 }
 .custom-select__option--is-focused {

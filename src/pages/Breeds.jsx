@@ -104,15 +104,15 @@ const Breeds = () => {
       {isLoading && <p>Loading ...</p>}
       {breeds && (
         <>
-          <section className="md:flex md:items-center w-full gap-x-4">
-            <Searchbar getQuery={getInputQuery} />
+          <section className=" flex flex-col gap-y-3 md:flex-row md:items-center w-full gap-x-4">
+            <Searchbar className="" getQuery={getInputQuery} />
             {options.length > 0 && (
               <Select
                 options={options}
                 placeholder="All Breeds"
                 classNamePrefix="custom-select"
                 className="
-    focus:outline-0  font-bold text-gray-900 dark:text-white bg-gray-50 border border-gray-300 focus:border-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-100"
+    focus:outline-0 md:w-[30%] font-bold text-gray-900 dark:text-white bg-gray-50 border border-gray-300 focus:border-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-100"
                 onChange={(option) => setQuery(option.value)}
               />
             )}

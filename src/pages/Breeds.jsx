@@ -5,7 +5,8 @@ import Select from 'react-select';
 // import { useGetBreedsQuery } from '../redux/breed/breedsApiSlice';
 import { Searchbar } from '../components/Searchbar';
 // import { Select } from '../components/Select';
-import { usePagination } from '../hooks/usePagination';
+import { selectOptions } from '../utilities/options';
+import { usePagination, useOptions } from '../hooks';
 import { Pagination } from '../components/Pagination';
 import { MasonryGallery } from '../components/MasonryGallery';
 import { requests } from '../servises/API';
@@ -21,6 +22,7 @@ const Breeds = () => {
   const [shownPhotos, setShownPhotos] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const currentPhotos = usePagination(shownPhotos, limit, currentPage);
+  const breedOptions = useOptions(breeds, 'all', 'All Breeds');
 
   useEffect(() => {
     (async () => {
@@ -36,14 +38,6 @@ const Breeds = () => {
       }
     })();
   }, []);
-
-  const options = [
-    { value: 'all', label: 'All breeds' },
-    ...breeds.map((breed) => ({
-      value: breed.id,
-      label: breed.name,
-    })),
-  ];
 
   useEffect(() => {
     if (query === 0) return;
@@ -102,9 +96,9 @@ const Breeds = () => {
         <>
           <section className=" flex flex-col gap-y-3 md:flex-row md:items-center w-full gap-x-4">
             <Searchbar className="" getQuery={getInputQuery} />
-            {options.length > 0 && (
+            {breedOptions.length > 0 && (
               <Select
-                options={options}
+                options={breedOptions}
                 placeholder="All Breeds"
                 classNamePrefix="custom-select"
                 className="
@@ -114,12 +108,7 @@ const Breeds = () => {
             )}
 
             <Select
-              options={[
-                { value: 5, label: '5' },
-                { value: 10, label: '10' },
-                { value: 15, label: '15' },
-                { value: 20, label: '20' },
-              ]}
+              options={selectOptions.limit}
               placeholder="Limit"
               classNamePrefix="custom-select"
               className="

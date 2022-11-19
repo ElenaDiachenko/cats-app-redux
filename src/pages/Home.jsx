@@ -3,7 +3,7 @@ import Select from 'react-select';
 import { Pagination } from '../components/Pagination';
 import { MasonryGallery } from '../components/MasonryGallery';
 import { requests } from '../servises/API';
-
+import { usePagination, useOptions } from '../hooks';
 import { useGetBreedsQuery } from '../redux/breed/breedsApiSlice';
 
 // order, type, breedId, limit;
@@ -23,7 +23,11 @@ const Home = () => {
     })),
   ];
 
-  return <div>Home</div>;
+  return (
+    <section className=" flex flex-col gap-y-3 md:flex-row md:items-center w-full gap-x-4">
+      <div></div>
+    </section>
+  );
 };
 
 export default Home;

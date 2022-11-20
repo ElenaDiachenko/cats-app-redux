@@ -63,15 +63,10 @@ const Breeds = () => {
       setCurrentPage(1);
       return;
     }
-    // if (query === 'all') {
-    //   setShownPhotos(breeds);
-    //   return;
-    // }
 
     setShownPhotos(selectedBreed);
     setCurrentPage(1);
   }, [query, breeds, currentPage, selectedBreed]);
-  console.log(query);
   // const getBreedToShow = (query) => {
   //   if (breeds.length < 0) return;
   //   if (query === '') return breeds;
@@ -123,24 +118,6 @@ const Breeds = () => {
     focus:outline-0  font-bold text-gray-900 dark:text-white bg-gray-50 border border-gray-300 focus:border-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-100"
               onChange={(option) => setLimit(option.value)}
             />
-            {/* {options.length > 0 && (
-              <Select
-                value={query}
-                options={options}
-                onChange={(value) => setQuery(value)}
-              />
-            )}
-            <Select
-              value={limit}
-              onChange={(value) => setLimit(value)}
-              defaultValue="Limit"
-              options={[
-                { id: 5, name: '5' },
-                { id: 10, name: '10' },
-                { id: 15, name: '15' },
-                { id: 20, name: '20' },
-              ]}
-            /> */}
           </section>
           {isLoading && <p>Loading ...</p>}
           {error && <p>Something went wrong</p>}

@@ -1,4 +1,4 @@
-import { usePagination } from './usePagination';
+import { usePaginationRange, DOTS } from './usePaginationRange';
 import { useOptions } from './useOptions';
 
-export { useOptions, usePagination };
+export { useOptions, usePaginationRange, DOTS };

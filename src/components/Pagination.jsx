@@ -1,32 +1,74 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { usePaginationRange, DOTS } from '../hooks';
+import { BsArrowLeft, BsArrowRight } from 'react-icons/bs';
 
-export const Pagination = ({ currentPage, limit, total, paginate }) => {
-  const pageNumbers = [];
+export const Pagination = ({
+  total,
+  currentPage,
+  buttonConst,
+  limit,
+  siblingCount,
+  paginate,
+}) => {
+  const [totalPageCount] = useState(Math.ceil(total / limit));
+
+  const paginationRange = usePaginationRange({
+    totalPageCount,
+    buttonConst,
+    siblingCount,
+    currentPage,
+  });
+
   const activeClassName =
-    'rounded-full flex justify-center items-center w-[40px] h-[40px] font-bold bg-red-500 text-white hover:bg-slate-600';
+    'rounded flex justify-center items-center w-[40px] h-[40px] font-bold border border-gray-700 bg-gray-50 dark:bg-gray-700';
+  const commonClassName =
+    'rounded flex justify-center items-center w-[40px] h-[40px] font-bold border border-transparent hover:bg-gray-50 dark:hover:bg-gray-700';
 
-  for (let i = 1; i <= Math.ceil(total / limit); i++) {
-    pageNumbers.push(i);
+  function changePage(event) {
+    const pageNumber = Number(event.target.textContent);
+    paginate(pageNumber);
   }
 
   return (
-    <nav>
-      <ul className="mt-5 flex justify-start items-center gap-x-3">
-        {pageNumbers.map((number) => (
-          <li key={number}>
+    <div>
+      <div className="mt-5 flex justify-center items-center gap-x-4">
+        {currentPage > 1 && (
+          <button
+            onClick={() => paginate(currentPage - 1)}
+            className={commonClassName}
+          >
+            <BsArrowLeft size={23} />
+          </button>
+        )}
+        {paginationRange.map((item, index) => {
+          if (item === DOTS) {
+            return (
+              <button key={index} className={commonClassName}>
+                &#8230;
+              </button>
+            );
+          }
+          return (
             <button
-              onClick={() => paginate(number)}
+              key={index}
+              onClick={changePage}
               className={
-                currentPage === number
-                  ? activeClassName
-                  : 'rounded-full flex justify-center items-center w-[40px] h-[40px] font-bold bg-slate-500 hover:bg-slate-600'
+                currentPage === item ? activeClassName : commonClassName
               }
             >
-              {number}
+              <span>{item}</span>
             </button>
-          </li>
-        ))}
-      </ul>
-    </nav>
+          );
+        })}
+        {currentPage !== totalPageCount && (
+          <button
+            onClick={() => paginate(currentPage + 1)}
+            className={commonClassName}
+          >
+            <BsArrowRight size={23} />
+          </button>
+        )}
+      </div>
+    </div>
   );
 };

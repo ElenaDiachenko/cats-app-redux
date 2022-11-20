@@ -4,15 +4,13 @@ import Select from 'react-select';
 // import { getAllBreeds } from '../redux/breed/breedsSlice';
 // import { useGetBreedsQuery } from '../redux/breed/breedsApiSlice';
 import { Searchbar } from '../components/Searchbar';
-import Pagination2 from '../components/Pagination2';
-import { selectOptions } from '../utilities/options';
-import { usePagination, useOptions } from '../hooks';
 import { Pagination } from '../components/Pagination';
+import { selectOptions } from '../utilities/options';
+import { useOptions } from '../hooks';
 import { MasonryGallery } from '../components/MasonryGallery';
 import { requests } from '../servises/API';
 
 const Breeds = () => {
-  // const { data, error, isLoading, isFetching } = useGetBreedsQuery();
   const [breeds, setBreeds] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -21,7 +19,6 @@ const Breeds = () => {
   const [limit, setLimit] = useState(10);
   const [shownPhotos, setShownPhotos] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  // const currentPhotos = usePagination(shownPhotos, limit, currentPage);
   const breedOptions = useOptions(breeds, 'all', 'All Breeds');
 
   const indexOfLastPost = currentPage * limit;
@@ -67,6 +64,14 @@ const Breeds = () => {
     setShownPhotos(selectedBreed);
     setCurrentPage(1);
   }, [query, breeds, currentPage, selectedBreed]);
+
+  useEffect(() => {
+    window.scrollTo({
+      behavior: 'smooth',
+      top: '0px',
+    });
+  }, [currentPage]);
+
   // const getBreedToShow = (query) => {
   //   if (breeds.length < 0) return;
   //   if (query === '') return breeds;
@@ -86,11 +91,11 @@ const Breeds = () => {
 
   const getInputQuery = (searchQuery) => {
     setQuery(searchQuery);
-    console.log(query);
   };
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
+  const selectClassName =
+    'focus:outline-0 md:w-[30%] font-bold text-gray-900 dark:text-white bg-gray-50 border border-gray-300 focus:border-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-100';
   return (
     <>
       {breeds && (
@@ -102,8 +107,7 @@ const Breeds = () => {
                 options={breedOptions}
                 placeholder="All Breeds"
                 classNamePrefix="custom-select"
-                className="
-    focus:outline-0 md:w-[30%] font-bold text-gray-900 dark:text-white bg-gray-50 border border-gray-300 focus:border-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-100"
+                className={selectClassName}
                 onChange={(option) => {
                   setQuery(option.value);
                 }}
@@ -114,8 +118,7 @@ const Breeds = () => {
               options={selectOptions.limit}
               placeholder="Limit"
               classNamePrefix="custom-select"
-              className="
-    focus:outline-0  font-bold text-gray-900 dark:text-white bg-gray-50 border border-gray-300 focus:border-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-100"
+              className={selectClassName}
               onChange={(option) => setLimit(option.value)}
             />
           </section>
@@ -124,8 +127,8 @@ const Breeds = () => {
 
           {currentPhotos && <MasonryGallery photos={currentPhotos} />}
 
-          {shownPhotos.length > currentPhotos.length && (
-            <Pagination2
+          {shownPhotos.length > limit && (
+            <Pagination
               limit={limit}
               total={shownPhotos.length}
               paginate={paginate}

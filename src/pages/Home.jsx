@@ -3,7 +3,7 @@ import Select from 'react-select';
 import { Pagination } from '../components/Pagination';
 import { MasonryGallery } from '../components/MasonryGallery';
 import { requests } from '../servises/API';
-import { usePagination, useOptions } from '../hooks';
+import { useOptions } from '../hooks';
 import { selectOptions } from '../utilities/options';
 
 const Home = () => {
@@ -17,7 +17,6 @@ const Home = () => {
   const [shownPhotos, setShownPhotos] = useState([]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
-  const currentPhotos = usePagination(shownPhotos, limit, page);
   const breedOptions = useOptions(breeds, 'all', 'All Breeds');
 
   useEffect(() => {
@@ -49,13 +48,6 @@ const Home = () => {
     })();
   }, [breed, limit, order, type, page, breeds]);
 
-  // const breedOptions = [
-  //   { value: 'all', label: 'All Breeds' },
-  //   ...breeds.map((item) => ({
-  //     value: item.id,
-  //     label: item.name,
-  //   })),
-  // ];
   const paginate = (pageNumber) => setPage(pageNumber);
 
   return (
@@ -71,7 +63,10 @@ const Home = () => {
                 classNamePrefix="custom-select"
                 className="
     focus:outline-0 w-full md:w-[50%] font-bold text-gray-900 dark:text-white bg-gray-50 border border-gray-300 focus:border-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-100"
-                onChange={(option) => setBreed(option.value)}
+                onChange={(option) => {
+                  setBreed(option.value);
+                  setPage(1);
+                }}
               />
               <Select
                 options={selectOptions.type}
@@ -79,7 +74,10 @@ const Home = () => {
                 classNamePrefix="custom-select"
                 className="
     focus:outline-0 w-full md:w-[50%] font-bold text-gray-900 dark:text-white bg-gray-50 border border-gray-300 focus:border-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-100"
-                onChange={(option) => setType(option.value)}
+                onChange={(option) => {
+                  setType(option.value);
+                  setPage(1);
+                }}
               />
             </div>
             <div className="flex justify-between w-full gap-x-3">
@@ -89,7 +87,10 @@ const Home = () => {
                 classNamePrefix="custom-select"
                 className="
     focus:outline-0 w-full md:w-[50%] font-bold text-gray-900 dark:text-white bg-gray-50 border border-gray-300 focus:border-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-100"
-                onChange={(option) => setOrder(option.value)}
+                onChange={(option) => {
+                  setOrder(option.value);
+                  setPage(1);
+                }}
               />
               <Select
                 options={selectOptions.limit}
@@ -101,7 +102,7 @@ const Home = () => {
               />
             </div>
           </section>
-          {currentPhotos && <MasonryGallery photos={currentPhotos} />}
+          {shownPhotos.length > 0 && <MasonryGallery photos={shownPhotos} />}
 
           {shownPhotos.length > 0 && (
             <Pagination

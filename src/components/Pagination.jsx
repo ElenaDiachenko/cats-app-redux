@@ -11,7 +11,7 @@ export const Pagination = ({ currentPage, limit, total, paginate }) => {
 
   return (
     <nav>
-      <ul className="mt-5 flex justify-center items-center gap-x-3">
+      <ul className="mt-5 flex justify-start items-center gap-x-3">
         {pageNumbers.map((number) => (
           <li key={number}>
             <button

@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import Select from 'react-select';
-import { Pagination } from '../components/Pagination';
 import { MasonryGallery } from '../components/MasonryGallery';
 import { requests } from '../servises/API';
 import { useOptions } from '../hooks';
 import { selectOptions } from '../utilities/options';
+import Pagination2 from '../components/Pagination2';
 
 const Home = () => {
   const [breeds, setBreeds] = useState([]);
@@ -16,7 +16,7 @@ const Home = () => {
   const [limit, setLimit] = useState(10);
   const [shownPhotos, setShownPhotos] = useState([]);
   const [page, setPage] = useState(1);
-  const [total, setTotal] = useState(0);
+  const [total, setTotal] = useState(null);
   const breedOptions = useOptions(breeds, 'all', 'All Breeds');
 
   useEffect(() => {
@@ -37,16 +37,26 @@ const Home = () => {
   useEffect(() => {
     if (breeds.length < 0) return;
     (async () => {
+      setTotal(null);
       try {
         const res = await requests.getImages(order, type, breed, limit, page);
+
         setShownPhotos(res.data);
         setTotal(+res.headers['pagination-count']);
-        console.log(res.data);
+
+        console.log(+res.headers['pagination-count']);
       } catch (error) {
         console.log(error.message);
       }
     })();
   }, [breed, limit, order, type, page, breeds]);
+
+  useEffect(() => {
+    window.scrollTo({
+      behavior: 'smooth',
+      top: '0px',
+    });
+  }, [page]);
 
   const paginate = (pageNumber) => setPage(pageNumber);
 
@@ -64,6 +74,11 @@ const Home = () => {
                 className="
     focus:outline-0 w-full md:w-[50%] font-bold text-gray-900 dark:text-white bg-gray-50 border border-gray-300 focus:border-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-100"
                 onChange={(option) => {
+                  if (option.value === 'all') {
+                    setBreed('');
+                    setPage(1);
+                    return;
+                  }
                   setBreed(option.value);
                   setPage(1);
                 }}
@@ -76,7 +91,6 @@ const Home = () => {
     focus:outline-0 w-full md:w-[50%] font-bold text-gray-900 dark:text-white bg-gray-50 border border-gray-300 focus:border-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-100"
                 onChange={(option) => {
                   setType(option.value);
-                  setPage(1);
                 }}
               />
             </div>
@@ -89,7 +103,6 @@ const Home = () => {
     focus:outline-0 w-full md:w-[50%] font-bold text-gray-900 dark:text-white bg-gray-50 border border-gray-300 focus:border-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-100"
                 onChange={(option) => {
                   setOrder(option.value);
-                  setPage(1);
                 }}
               />
               <Select
@@ -104,12 +117,15 @@ const Home = () => {
           </section>
           {shownPhotos.length > 0 && <MasonryGallery photos={shownPhotos} />}
 
-          {shownPhotos.length > 0 && (
-            <Pagination
+          {shownPhotos.length > 0 && total && (
+            <Pagination2
               limit={limit}
               total={total}
               paginate={paginate}
               currentPage={page}
+              buttonConst={3}
+              contentPerPage={5}
+              siblingCount={1}
             />
           )}
         </>

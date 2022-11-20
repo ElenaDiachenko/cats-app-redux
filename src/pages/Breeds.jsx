@@ -4,7 +4,7 @@ import Select from 'react-select';
 // import { getAllBreeds } from '../redux/breed/breedsSlice';
 // import { useGetBreedsQuery } from '../redux/breed/breedsApiSlice';
 import { Searchbar } from '../components/Searchbar';
-// import { Select } from '../components/Select';
+import Pagination2 from '../components/Pagination2';
 import { selectOptions } from '../utilities/options';
 import { usePagination, useOptions } from '../hooks';
 import { Pagination } from '../components/Pagination';
@@ -17,12 +17,16 @@ const Breeds = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedBreed, setSelectedBreed] = useState([]);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(null);
   const [limit, setLimit] = useState(10);
   const [shownPhotos, setShownPhotos] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const currentPhotos = usePagination(shownPhotos, limit, currentPage);
+  // const currentPhotos = usePagination(shownPhotos, limit, currentPage);
   const breedOptions = useOptions(breeds, 'all', 'All Breeds');
+
+  const indexOfLastPost = currentPage * limit;
+  const indexOfFirstPost = indexOfLastPost - limit;
+  const currentPhotos = shownPhotos.slice(indexOfFirstPost, indexOfLastPost);
 
   useEffect(() => {
     (async () => {
@@ -40,7 +44,7 @@ const Breeds = () => {
   }, []);
 
   useEffect(() => {
-    if (query === 0) return;
+    if (!query) return;
     (async () => {
       try {
         const res = await requests.getBreedById(query);
@@ -54,18 +58,20 @@ const Breeds = () => {
   useEffect(() => {
     if (!breeds.length) return;
 
-    if (query === '') {
+    if (query === null || query === 'all') {
       setShownPhotos(breeds);
+      setCurrentPage(1);
       return;
     }
-    if (query === 'all') {
-      setShownPhotos(breeds);
-      return;
-    }
+    // if (query === 'all') {
+    //   setShownPhotos(breeds);
+    //   return;
+    // }
 
     setShownPhotos(selectedBreed);
-  }, [query, breeds, selectedBreed]);
-
+    setCurrentPage(1);
+  }, [query, breeds, currentPage, selectedBreed]);
+  console.log(query);
   // const getBreedToShow = (query) => {
   //   if (breeds.length < 0) return;
   //   if (query === '') return breeds;
@@ -103,7 +109,9 @@ const Breeds = () => {
                 classNamePrefix="custom-select"
                 className="
     focus:outline-0 md:w-[30%] font-bold text-gray-900 dark:text-white bg-gray-50 border border-gray-300 focus:border-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-100"
-                onChange={(option) => setQuery(option.value)}
+                onChange={(option) => {
+                  setQuery(option.value);
+                }}
               />
             )}
 
@@ -140,11 +148,14 @@ const Breeds = () => {
           {currentPhotos && <MasonryGallery photos={currentPhotos} />}
 
           {shownPhotos.length > currentPhotos.length && (
-            <Pagination
+            <Pagination2
               limit={limit}
               total={shownPhotos.length}
               paginate={paginate}
               currentPage={currentPage}
+              buttonConst={3}
+              contentPerPage={5}
+              siblingCount={1}
             />
           )}
         </>
@@ -154,3 +165,9 @@ const Breeds = () => {
 };
 
 export default Breeds;
+// <Pagination
+//   limit={limit}
+//   total={shownPhotos.length}
+//   paginate={paginate}
+//   currentPage={currentPage}
+// />

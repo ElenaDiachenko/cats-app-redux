@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { usePaginationRange, DOTS } from '../hooks';
 import { BsArrowLeft, BsArrowRight } from 'react-icons/bs';
 
@@ -10,7 +10,7 @@ export const Pagination = ({
   siblingCount,
   paginate,
 }) => {
-  const [totalPageCount] = useState(Math.ceil(total / limit));
+  const totalPageCount = Math.ceil(total / limit);
 
   const paginationRange = usePaginationRange({
     totalPageCount,

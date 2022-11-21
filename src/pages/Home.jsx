@@ -9,7 +9,7 @@ import { Pagination } from '../components/Pagination';
 const Home = () => {
   const [breeds, setBreeds] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
   const [order, setOrder] = useState('rand');
   const [type, setType] = useState('gif,jpg,png');
   const [breed, setBreed] = useState('');
@@ -27,7 +27,7 @@ const Home = () => {
         setBreeds(res.data);
       } catch (error) {
         console.log(error.message);
-        setError(error.message);
+        setError(true);
       } finally {
         setIsLoading(false);
       }
@@ -35,7 +35,7 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    if (breeds.length < 0) return;
+    if (!breeds.length) return;
     (async () => {
       setTotal(null);
       try {

@@ -18,12 +18,16 @@ const Breeds = () => {
   const [query, setQuery] = useState(null);
   const [limit, setLimit] = useState(10);
   const [shownPhotos, setShownPhotos] = useState([]);
+  const [currentPhotos, setCurrentPhotos] = useState([]);
+  const [totalBreedQuery, setTotalBreedQuery] = useState(null);
+  const [total, setTotal] = useState(null);
+
   const [currentPage, setCurrentPage] = useState(1);
   const breedOptions = useOptions(breeds, 'all', 'All Breeds');
 
-  const indexOfLastPost = currentPage * limit;
-  const indexOfFirstPost = indexOfLastPost - limit;
-  const currentPhotos = shownPhotos.slice(indexOfFirstPost, indexOfLastPost);
+  // const indexOfLastPost = currentPage * limit;
+  // const indexOfFirstPost = indexOfLastPost - limit;
+  // const currentPhotos = shownPhotos.slice(indexOfFirstPost, indexOfLastPost);
 
   useEffect(() => {
     (async () => {
@@ -44,56 +48,63 @@ const Breeds = () => {
     if (!query) return;
     (async () => {
       try {
-        const res = await requests.getBreedById(query);
+        const res = await requests.getBreedById(query, 30);
         setSelectedBreed(res.data);
+        setTotalBreedQuery(+res.headers['pagination-count']);
       } catch (error) {
         console.log(error.message);
       }
     })();
-  }, [query]);
+  }, [query, limit]);
 
   useEffect(() => {
     if (!breeds.length) return;
 
     if (query === null || query === 'all') {
       setShownPhotos(breeds);
+      setTotal(breeds.length);
       setCurrentPage(1);
       return;
     }
 
     setShownPhotos(selectedBreed);
+    setTotal(totalBreedQuery);
     setCurrentPage(1);
-  }, [query, breeds, currentPage, selectedBreed]);
+  }, [breeds, query, selectedBreed, totalBreedQuery]);
+  ///////////////////////////////////////////////
+  // useEffect(() => {
+  //   if (!breeds.length) return;
 
-  useEffect(() => {
-    window.scrollTo({
-      behavior: 'smooth',
-      top: '0px',
-    });
-  }, [currentPage]);
+  //   if (query === null || query === 'all') {
+  //     setShownPhotos(breeds);
+  //     return;
+  //   }
+  //   const result = breeds.filter((breed) => breed.id === query);
+  //   setShownPhotos(result);
+  // }, [breeds, limit, query]);
 
+  //////////////////////////////////////////////////////////////////////////
   // const getBreedToShow = (query) => {
   //   if (breeds.length < 0) return;
   //   if (query === '') return breeds;
   //   return breeds.filter((breed) => breed.name.toLowerCase() === query);
   // };
 
-  // useEffect(() => {
-  //   (async () => {
-  //     try {
-  //       const res = await requests.getImages(limit);
-  //       setImages(res.data);
-  //     } catch (error) {
-  //       console.log(error.message);
-  //     }
-  //   })();
-  // }, [limit]);
+  useEffect(() => {
+    if (!shownPhotos.length > 0) return;
+    const indexOfLastItem = currentPage * limit;
+    const indexOfFirstItem = indexOfLastItem - limit;
+    setCurrentPhotos(shownPhotos.slice(indexOfFirstItem, indexOfLastItem));
+  }, [currentPage, limit, shownPhotos]);
 
   const getInputQuery = (searchQuery) => {
     setQuery(searchQuery);
   };
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   const selectClassName =
     'focus:outline-0 md:w-[30%] font-bold text-gray-900 dark:text-white bg-gray-50 border border-gray-300 focus:border-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-100';
   return (
@@ -119,7 +130,10 @@ const Breeds = () => {
               placeholder="Limit"
               classNamePrefix="custom-select"
               className={selectClassName}
-              onChange={(option) => setLimit(option.value)}
+              onChange={(option) => {
+                setLimit(option.value);
+                // setCurrentPage(1);
+              }}
             />
           </section>
           {isLoading && <p>Loading ...</p>}
@@ -127,10 +141,10 @@ const Breeds = () => {
 
           {currentPhotos && <MasonryGallery photos={currentPhotos} />}
 
-          {shownPhotos.length > limit && (
+          {total > limit && (
             <Pagination
               limit={limit}
-              total={shownPhotos.length}
+              total={total}
               paginate={paginate}
               currentPage={currentPage}
               buttonConst={3}

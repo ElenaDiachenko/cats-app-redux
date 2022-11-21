@@ -1,7 +1,8 @@
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import { Link } from 'react-router-dom';
+import { FaRegHeart } from 'react-icons/fa';
 
-export const MasonryGallery = ({ photos, link }) => {
+export const MasonryGallery = ({ photos, link, favourite }) => {
   return (
     <ResponsiveMasonry
       className="mt-6"
@@ -27,6 +28,17 @@ export const MasonryGallery = ({ photos, link }) => {
                   )}
                 </div>
               </Link>
+            ))
+          : favourite
+          ? photos.map((photo) => (
+              <div className="relative" key={photo.id}>
+                <img className="rounded w-full block" src={photo?.url} alt="" />
+                <div className="absolute top-0 left-0 w-full h-full hover:bg-black/60 opacity-0 hover:opacity-100 text-white">
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    <FaRegHeart className="fill-red-400" size={35} />
+                  </div>
+                </div>
+              </div>
             ))
           : photos.map((photo) => (
               <div className="relative" key={photo.id}>

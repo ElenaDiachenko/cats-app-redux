@@ -19,6 +19,7 @@ const Home = () => {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(null);
   const breedOptions = useOptions(breeds, 'all', 'All Breeds');
+  const [favourite] = useState(true);
 
   useEffect(() => {
     if (!breeds.length) return;
@@ -120,7 +121,7 @@ const Home = () => {
           )}
 
           {shownPhotos.length > 0 && !isLoadingGallery && (
-            <MasonryGallery photos={shownPhotos} />
+            <MasonryGallery photos={shownPhotos} favourite={favourite} />
           )}
 
           {total > limit && !isLoadingGallery && (

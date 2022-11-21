@@ -20,7 +20,7 @@ const Breeds = () => {
   const [currentPhotos, setCurrentPhotos] = useState([]);
   const [totalBreedQuery, setTotalBreedQuery] = useState(null);
   const [total, setTotal] = useState(null);
-
+  const [link] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const breedOptions = useOptions(breeds, 'all', 'All Breeds');
 
@@ -66,6 +66,7 @@ const Breeds = () => {
     setTotal(totalBreedQuery);
     setCurrentPage(1);
   }, [breeds, query, selectedBreed, totalBreedQuery]);
+
   ///////////////////////////////////////////////
   // useEffect(() => {
   //   if (!breeds.length) return;
@@ -138,7 +139,9 @@ const Breeds = () => {
             />
           </section>
 
-          {currentPhotos && <MasonryGallery photos={currentPhotos} />}
+          {currentPhotos && (
+            <MasonryGallery photos={currentPhotos} link={link} />
+          )}
 
           {total > limit && (
             <Pagination

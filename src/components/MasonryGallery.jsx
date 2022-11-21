@@ -1,32 +1,43 @@
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import { Link } from 'react-router-dom';
 
-export const MasonryGallery = ({ photos }) => {
+export const MasonryGallery = ({ photos, link }) => {
   return (
     <ResponsiveMasonry
       className="mt-6"
       columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}
     >
       <Masonry gutter="20px">
-        {photos.map((photo) => (
-          <Link
-            to={`/breeds/${photo.id}`}
-            key={photo.reference_image_id ?? photo.id}
-          >
-            <div className="relative">
-              <img
-                className="rounded w-full block"
-                src={photo?.image?.url ?? photo?.url}
-                alt=""
-              />
-              {photo.name && (
-                <p className="absolute bottom-0 left-0 w-full text-center rounded-b text-white bg-black/50 py-3 font-bold">
-                  {photo.name}
-                </p>
-              )}
-            </div>
-          </Link>
-        ))}
+        {link
+          ? photos.map((photo) => (
+              <Link
+                to={`/breeds/${photo.id}`}
+                key={photo.reference_image_id ?? photo.id}
+              >
+                <div className="relative">
+                  <img
+                    className="rounded w-full block"
+                    src={photo?.image?.url ?? photo?.url}
+                    alt=""
+                  />
+                  {photo.name && (
+                    <p className="absolute bottom-0 left-0 w-full text-center rounded-b text-white bg-black/50 py-3 font-bold">
+                      {photo.name}
+                    </p>
+                  )}
+                </div>
+              </Link>
+            ))
+          : photos.map((photo) => (
+              <div className="relative" key={photo.id}>
+                <img className="rounded w-full block" src={photo?.url} alt="" />
+                {photo.name && (
+                  <p className="absolute bottom-0 left-0 w-full text-center rounded-b text-white bg-black/50 py-3 font-bold">
+                    {photo.name}
+                  </p>
+                )}
+              </div>
+            ))}
 
         {/* {photos.map((photo) => (
           <div key={photo.id}>

@@ -1,6 +1,5 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-
 import { CiFaceSmile } from 'react-icons/ci';
 import { CgSmileSad } from 'react-icons/cg';
 import { FaRegHeart } from 'react-icons/fa';
@@ -34,7 +33,7 @@ export const NavLikes = () => {
         className={({ isActive }) =>
           isActive
             ? activeClassName
-            : 'p-.1.5 rounded flex justify-center items-center'
+            : 'p-1.5 rounded flex justify-center items-center'
         }
         to="/dislikes"
       >

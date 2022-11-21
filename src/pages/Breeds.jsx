@@ -8,50 +8,51 @@ import { Pagination } from '../components/Pagination';
 import { selectOptions } from '../utilities/options';
 import { useOptions, useGetBreeds } from '../hooks';
 import { MasonryGallery } from '../components/MasonryGallery';
-import { requests } from '../servises/API';
+// import { requests } from '../servises/API';
 import { LoaderSpinner } from '../components/LoaderSpinner';
 
 const Breeds = () => {
   const { breeds, isLoading, error } = useGetBreeds();
-  const [selectedBreed, setSelectedBreed] = useState([]);
+  // const [selectedBreed, setSelectedBreed] = useState([]);
   const [query, setQuery] = useState(null);
   const [limit, setLimit] = useState(10);
   const [shownPhotos, setShownPhotos] = useState([]);
   const [currentPhotos, setCurrentPhotos] = useState([]);
-  const [totalBreedQuery, setTotalBreedQuery] = useState(null);
+  // const [totalBreedQuery, setTotalBreedQuery] = useState(null);
   const [total, setTotal] = useState(null);
   const [link] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const breedOptions = useOptions(breeds, 'all', 'All Breeds');
 
   // useEffect(() => {
+  //   if (!query) return;
   //   (async () => {
   //     try {
-  //       setIsLoading(true);
-  //       const res = await requests.getBreeds();
-  //       setBreeds(res.data);
+  //       const res = await requests.getBreedById(query, 30);
+  //       setSelectedBreed(res.data);
+  //       setTotalBreedQuery(+res.headers['pagination-count']);
   //     } catch (error) {
   //       console.log(error.message);
-  //       setError(error.message);
-  //     } finally {
-  //       setIsLoading(false);
   //     }
   //   })();
-  // }, []);
+  // }, [query, limit]);
 
-  useEffect(() => {
-    if (!query) return;
-    (async () => {
-      try {
-        const res = await requests.getBreedById(query, 30);
-        setSelectedBreed(res.data);
-        setTotalBreedQuery(+res.headers['pagination-count']);
-      } catch (error) {
-        console.log(error.message);
-      }
-    })();
-  }, [query, limit]);
+  // useEffect(() => {
+  //   if (!breeds.length) return;
 
+  //   if (query === null || query === 'all') {
+  //     setShownPhotos(breeds);
+  //     setTotal(breeds.length);
+  //     setCurrentPage(1);
+  //     return;
+  //   }
+
+  //   setShownPhotos(selectedBreed);
+  //   setTotal(totalBreedQuery);
+  //   setCurrentPage(1);
+  // }, [breeds, query, selectedBreed, totalBreedQuery]);
+
+  ///////////////////////////////////////////////
   useEffect(() => {
     if (!breeds.length) return;
 
@@ -61,30 +62,9 @@ const Breeds = () => {
       setCurrentPage(1);
       return;
     }
-
-    setShownPhotos(selectedBreed);
-    setTotal(totalBreedQuery);
-    setCurrentPage(1);
-  }, [breeds, query, selectedBreed, totalBreedQuery]);
-
-  ///////////////////////////////////////////////
-  // useEffect(() => {
-  //   if (!breeds.length) return;
-
-  //   if (query === null || query === 'all') {
-  //     setShownPhotos(breeds);
-  //     return;
-  //   }
-  //   const result = breeds.filter((breed) => breed.id === query);
-  //   setShownPhotos(result);
-  // }, [breeds, limit, query]);
-
-  //////////////////////////////////////////////////////////////////////////
-  // const getBreedToShow = (query) => {
-  //   if (breeds.length < 0) return;
-  //   if (query === '') return breeds;
-  //   return breeds.filter((breed) => breed.name.toLowerCase() === query);
-  // };
+    const result = breeds.filter((breed) => breed.id === query);
+    setShownPhotos(result);
+  }, [breeds, limit, query]);
 
   useEffect(() => {
     if (!shownPhotos.length > 0) return;

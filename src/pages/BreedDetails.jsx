@@ -4,6 +4,7 @@ import { useGetBreedsQuery } from '../redux/breed/breedsApiSlice';
 import { requests } from '../servises/API';
 import Carousel from '../components/Carousel';
 import { BackLink } from '../components/BackLink';
+import { LoaderSpinner } from '../components/LoaderSpinner';
 
 const BreedDetails = () => {
   const { data, error, isLoading, isFetching } = useGetBreedsQuery();
@@ -39,7 +40,11 @@ const BreedDetails = () => {
   return (
     <>
       {error && <p>Something went wrong</p>}
-      {isLoading && isFetching && <p>Loading ...</p>}
+      {isLoading && isFetching && (
+        <div className="mt-[100px]">
+          <LoaderSpinner />
+        </div>
+      )}
 
       {breedDescr && (
         <div className="flex flex-col gap-y-4">

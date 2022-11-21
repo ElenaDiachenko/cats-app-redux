@@ -2,14 +2,15 @@ import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { MasonryGallery } from '../components/MasonryGallery';
 import { requests } from '../servises/API';
-import { useOptions } from '../hooks';
+import { useOptions, useGetBreeds } from '../hooks';
 import { selectOptions } from '../utilities/options';
 import { Pagination } from '../components/Pagination';
+import { LoaderSpinner } from '../components/LoaderSpinner';
 
 const Home = () => {
-  const [breeds, setBreeds] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const { breeds, isLoading, error } = useGetBreeds();
+  const [isLoadingGallery, setIsLoadingGallery] = useState(false);
+  const [errorGallery, setErrorGallery] = useState(false);
   const [order, setOrder] = useState('rand');
   const [type, setType] = useState('gif,jpg,png');
   const [breed, setBreed] = useState('');
@@ -20,31 +21,19 @@ const Home = () => {
   const breedOptions = useOptions(breeds, 'all', 'All Breeds');
 
   useEffect(() => {
-    (async () => {
-      try {
-        setIsLoading(true);
-        const res = await requests.getBreeds();
-        setBreeds(res.data);
-      } catch (error) {
-        console.log(error.message);
-        setError(true);
-      } finally {
-        setIsLoading(false);
-      }
-    })();
-  }, []);
-
-  useEffect(() => {
     if (!breeds.length) return;
     (async () => {
+      setIsLoadingGallery(true);
       setTotal(null);
       try {
         const res = await requests.getImages(order, type, breed, limit, page);
-
         setShownPhotos(res.data);
         setTotal(+res.headers['pagination-count']);
       } catch (error) {
+        setErrorGallery(true);
         console.log(error.message);
+      } finally {
+        setIsLoadingGallery(false);
       }
     })();
   }, [breed, limit, order, type, page, breeds]);
@@ -62,60 +51,79 @@ const Home = () => {
 
   return (
     <>
-      {isLoading && <p>Loading ...</p>}
+      {isLoading && (
+        <div className="mt-[100px]">
+          <LoaderSpinner />
+        </div>
+      )}
       {error && <p>Something went wrong</p>}
 
-      {breeds.length > 0 && selectOptions && (
+      {breeds.length > 0 && (
         <>
-          <section className=" flex flex-col  gap-y-3 md:flex-row md:items-center md:justify-between md:gap-x-3 ">
-            <div className="flex justify-between  w-full gap-x-3">
-              <Select
-                options={breedOptions}
-                placeholder="All Breeds"
-                classNamePrefix="custom-select"
-                className={selectClassName}
-                onChange={(option) => {
-                  if (option.value === 'all') {
-                    setBreed('');
+          {selectOptions && (
+            <section className=" flex flex-col  gap-y-3 md:flex-row md:items-center md:justify-between md:gap-x-3 ">
+              <div className="flex justify-between  w-full gap-x-3">
+                <Select
+                  options={breedOptions}
+                  placeholder="All Breeds"
+                  classNamePrefix="custom-select"
+                  className={selectClassName}
+                  onChange={(option) => {
+                    if (option.value === 'all') {
+                      setBreed('');
+                      setPage(1);
+                      return;
+                    }
+                    setBreed(option.value);
                     setPage(1);
-                    return;
-                  }
-                  setBreed(option.value);
-                  setPage(1);
-                }}
-              />
-              <Select
-                options={selectOptions.type}
-                placeholder="Type"
-                classNamePrefix="custom-select"
-                className={selectClassName}
-                onChange={(option) => {
-                  setType(option.value);
-                }}
-              />
+                  }}
+                />
+                <Select
+                  options={selectOptions.type}
+                  placeholder="Type"
+                  classNamePrefix="custom-select"
+                  className={selectClassName}
+                  onChange={(option) => {
+                    setType(option.value);
+                  }}
+                />
+              </div>
+              <div className="flex justify-between w-full gap-x-3">
+                <Select
+                  options={selectOptions.order}
+                  placeholder="Order"
+                  classNamePrefix="custom-select"
+                  className={selectClassName}
+                  onChange={(option) => {
+                    setOrder(option.value);
+                  }}
+                />
+                <Select
+                  options={selectOptions.limit}
+                  placeholder="Limit"
+                  classNamePrefix="custom-select"
+                  className={selectClassName}
+                  onChange={(option) => setLimit(option.value)}
+                />
+              </div>
+            </section>
+          )}
+          {isLoadingGallery && (
+            <div className="mt-[100px]">
+              <LoaderSpinner />
             </div>
-            <div className="flex justify-between w-full gap-x-3">
-              <Select
-                options={selectOptions.order}
-                placeholder="Order"
-                classNamePrefix="custom-select"
-                className={selectClassName}
-                onChange={(option) => {
-                  setOrder(option.value);
-                }}
-              />
-              <Select
-                options={selectOptions.limit}
-                placeholder="Limit"
-                classNamePrefix="custom-select"
-                className={selectClassName}
-                onChange={(option) => setLimit(option.value)}
-              />
+          )}
+          {errorGallery && (
+            <div className="mt-[100px]">
+              <p>Something went wrong</p>
             </div>
-          </section>
-          {shownPhotos.length > 0 && <MasonryGallery photos={shownPhotos} />}
+          )}
 
-          {total > limit && (
+          {shownPhotos.length > 0 && !isLoadingGallery && (
+            <MasonryGallery photos={shownPhotos} />
+          )}
+
+          {total > limit && !isLoadingGallery && (
             <Pagination
               limit={limit}
               total={total}

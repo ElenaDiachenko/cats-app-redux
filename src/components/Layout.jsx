@@ -1,10 +1,11 @@
-import React from 'react';
+import { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 import { BsSun, BsFillMoonFill } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleTheme } from '../redux/theme/themeSlice';
 import { NavMenu } from './NavMenu';
 import { NavLikes } from './NavLikes';
+import { LoaderSpinner } from './LoaderSpinner';
 
 const Layout = () => {
   const { darkTheme } = useSelector((state) => state);
@@ -40,7 +41,9 @@ const Layout = () => {
           </div>
         </nav>
       </header>
-      <Outlet />
+      <Suspense fallback={<LoaderSpinner />}>
+        <Outlet />
+      </Suspense>
     </div>
   );
 };

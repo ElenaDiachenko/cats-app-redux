@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { nanoid } from 'nanoid';
-import { FiUpload } from 'react-icons/fi';
+import { NavLink } from 'react-router-dom';
+import { FaCloudUploadAlt } from 'react-icons/fa';
 import Select from 'react-select';
 import { MasonryGallery } from '../components/MasonryGallery';
 import { requests } from '../servises/API';
@@ -170,13 +171,15 @@ const Home = () => {
                   onChange={(option) => setLimit(option.value)}
                 />
               </div>
-              <button
-                type=""
-                onClick={() => {}}
-                className="px-4 h-[50px] text-sm text-gray-900 bg-gray-50 border border-gray-300  dark:bg-gray-700 dark:border-gray-600  dark:text-white flex justify-center items-center hover:opacity-50"
-              >
-                <FiUpload className="mr-3" size={35} /> UPLOAD
-              </button>
+              <NavLink to="/upload">
+                <div
+                  type=""
+                  onClick={() => {}}
+                  className="px-4 h-[50px] text-sm text-gray-900 bg-gray-50 border border-gray-300  dark:bg-gray-700 dark:border-gray-600  dark:text-white flex justify-center items-center hover:opacity-50"
+                >
+                  <FaCloudUploadAlt className="mr-3" size={35} /> UPLOAD
+                </div>
+              </NavLink>
             </section>
           )}
           {isLoadingGallery && (

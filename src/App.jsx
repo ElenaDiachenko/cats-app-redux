@@ -5,6 +5,7 @@ import Layout from './components/Layout';
 import Home from './pages/Home';
 import Voting from './pages/Voting';
 import Breeds from './pages/Breeds';
+import Upload from './pages/Upload';
 import Likes from './pages/Likes';
 import Favourites from './pages/Favourites';
 import Dislikes from './pages/Dislikes';
@@ -21,6 +22,7 @@ function App() {
           <Route path="/voting" element={<Voting />} />
           <Route path="/breeds" element={<Breeds />} />
           <Route path="/breeds/:id" element={<BreedDetails />} />
+          <Route path="/upload" element={<Upload />} />
           <Route path="/likes" element={<Likes />} />
           <Route path="/favourites" element={<Favourites />} />
           <Route path="/dislikes" element={<Dislikes />} />

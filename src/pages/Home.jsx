@@ -24,21 +24,44 @@ const Home = () => {
   const [total, setTotal] = useState(null);
   const breedOptions = useOptions(breeds, 'all', 'All Breeds');
   const [favouriteBtn] = useState(true);
+  const [favouriteList, setFavouriteList] = useState([]);
+  const [favourite, setFavourite] = useState('');
 
   useEffect(() => {
     localStorage.setItem('catsapi_userId', JSON.stringify(userId));
   }, [userId]);
 
+  useEffect(() => {
+    (async () => {
+      try {
+        const result = await requests.getFavourites(userId);
+
+        setFavouriteList(result);
+      } catch (error) {
+        console.error(error.message);
+      }
+    })();
+  }, [userId, favourite]);
   /// show images
 
   useEffect(() => {
-    if (!breeds.length) return;
+    if (!breeds.length && !favouriteList.length) return;
     (async () => {
       setIsLoadingGallery(true);
       setTotal(null);
       try {
         const res = await requests.getImages(order, type, breed, limit, page);
-        setShownPhotos(res.data);
+        let compareRes = [];
+        res.data.forEach((item1) => {
+          favouriteList.forEach((item) => {
+            if (item.image_id === item1.id) {
+              item1 = { ...item1, favourite: true };
+            }
+          });
+          compareRes.push(item1);
+        });
+
+        setShownPhotos(compareRes);
         setTotal(+res.headers['pagination-count']);
       } catch (error) {
         setErrorGallery(true);
@@ -47,23 +70,7 @@ const Home = () => {
         setIsLoadingGallery(false);
       }
     })();
-  }, [breed, limit, order, type, page, breeds]);
-
-  //// add to favourite
-  const [favouriteList, setFavouriteList] = useState([]);
-  const [favourite, setFavourite] = useState(false);
-  useEffect(() => {
-    (async () => {
-      try {
-        const result = await requests.getFavourites(userId);
-
-        setFavouriteList(result);
-        // console.log(result);
-      } catch (error) {
-        console.error(error.message);
-      }
-    })();
-  }, [userId, favourite]);
+  }, [breed, limit, order, type, page, breeds, favourite, favouriteList]);
 
   const toggleFavourite = async (id) => {
     const filter = await favouriteList.find((it) => it.image_id === id);
@@ -75,8 +82,7 @@ const Home = () => {
             sub_id: userId,
           };
           requests.addFavourite(favourite);
-          setFavourite(true);
-          console.log(favourite);
+          setFavourite(nanoid());
         } catch (error) {
           console.log(error);
         }
@@ -85,7 +91,7 @@ const Home = () => {
       (() => {
         try {
           requests.removeFavourite(filter.id);
-          setFavourite(false);
+          setFavourite(nanoid());
         } catch (error) {
           console.log(error);
         }

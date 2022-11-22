@@ -20,7 +20,7 @@ const Layout = () => {
           justify-between
         "
         >
-          <div className="flex gap-x-3 p-4  items-center font-bold text-xl">
+          <div className="flex gap-x-4 p-4  items-center font-bold text-xl">
             <NavMenu />
           </div>
           <div className="flex items-center lg:order-2">
@@ -28,14 +28,14 @@ const Layout = () => {
             {!darkTheme ? (
               <BsFillMoonFill
                 onClick={() => onToggle()}
-                size={20}
-                className="hover:opacity-50 cursor-pointer"
+                size={30}
+                className="rounded bg-transparent flex justify-center items-center  hover:opacity-50 cursor-pointer"
               />
             ) : (
               <BsSun
                 onClick={() => onToggle()}
-                size={20}
-                className="hover:opacity-50 cursor-pointer"
+                size={30}
+                className="rounded bg-transparent flex justify-center items-center  hover:opacity-50 cursor-pointer"
               />
             )}
           </div>

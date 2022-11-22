@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { nanoid } from 'nanoid';
 import Select from 'react-select';
 import { MasonryGallery } from '../components/MasonryGallery';
 import { requests } from '../servises/API';
@@ -8,6 +9,9 @@ import { Pagination } from '../components/Pagination';
 import { LoaderSpinner } from '../components/LoaderSpinner';
 
 const Home = () => {
+  const [userId] = useState(
+    JSON.parse(localStorage.getItem('catsapi_userId')) ?? nanoid(),
+  );
   const { breeds, isLoading, error } = useGetBreeds();
   const [isLoadingGallery, setIsLoadingGallery] = useState(false);
   const [errorGallery, setErrorGallery] = useState(false);
@@ -19,7 +23,13 @@ const Home = () => {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(null);
   const breedOptions = useOptions(breeds, 'all', 'All Breeds');
-  const [favourite] = useState(true);
+  const [favouriteBtn] = useState(true);
+
+  useEffect(() => {
+    localStorage.setItem('catsapi_userId', JSON.stringify(userId));
+  }, [userId]);
+
+  /// show images
 
   useEffect(() => {
     if (!breeds.length) return;
@@ -39,6 +49,51 @@ const Home = () => {
     })();
   }, [breed, limit, order, type, page, breeds]);
 
+  //// add to favourite
+  const [favouriteList, setFavouriteList] = useState([]);
+  const [favourite, setFavourite] = useState(false);
+  useEffect(() => {
+    (async () => {
+      try {
+        const result = await requests.getFavourites(userId);
+
+        setFavouriteList(result);
+        // console.log(result);
+      } catch (error) {
+        console.error(error.message);
+      }
+    })();
+  }, [userId, favourite]);
+
+  const toggleFavourite = async (id) => {
+    const filter = await favouriteList.find((it) => it.image_id === id);
+    if (filter === undefined) {
+      (() => {
+        try {
+          const favourite = {
+            image_id: id,
+            sub_id: userId,
+          };
+          requests.addFavourite(favourite);
+          setFavourite(true);
+          console.log(favourite);
+        } catch (error) {
+          console.log(error);
+        }
+      })();
+    } else {
+      (() => {
+        try {
+          requests.removeFavourite(filter.id);
+          setFavourite(false);
+        } catch (error) {
+          console.log(error);
+        }
+      })();
+    }
+  };
+
+  //////
   useEffect(() => {
     window.scrollTo({
       behavior: 'smooth',
@@ -47,6 +102,7 @@ const Home = () => {
   }, [page]);
 
   const paginate = (pageNumber) => setPage(pageNumber);
+
   const selectClassName =
     'focus:outline-0 w-full md:w-[50%] font-bold text-gray-900 dark:text-white bg-gray-50 border border-gray-300 focus:border-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-100';
 
@@ -121,7 +177,11 @@ const Home = () => {
           )}
 
           {shownPhotos.length > 0 && !isLoadingGallery && (
-            <MasonryGallery photos={shownPhotos} favourite={favourite} />
+            <MasonryGallery
+              photos={shownPhotos}
+              favouriteBtn={favouriteBtn}
+              handleFavourite={toggleFavourite}
+            />
           )}
 
           {total > limit && !isLoadingGallery && (

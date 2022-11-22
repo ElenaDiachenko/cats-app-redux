@@ -3,19 +3,17 @@ import { requests } from '../servises/API';
 import { CiFaceSmile } from 'react-icons/ci';
 import { CgSmileSad } from 'react-icons/cg';
 import { FaRegHeart } from 'react-icons/fa';
-import { nanoid } from 'nanoid';
+// import { nanoid } from 'nanoid';
 
 const Voting = () => {
   const [currentImage, setCurrentImage] = useState({});
-  const [userId] = useState(
-    JSON.parse(localStorage.getItem('catsapi_userId')) ?? nanoid(),
-  );
+  const [userId] = useState(JSON.parse(localStorage.getItem('catsapi_userId')));
   const [clicked, setClicked] = useState(false);
   const [userActions, setUserActions] = useState([]);
 
-  useEffect(() => {
-    localStorage.setItem('catsapi_userId', JSON.stringify(userId));
-  }, [userId]);
+  // useEffect(() => {
+  //   localStorage.setItem('catsapi_userId', JSON.stringify(userId));
+  // }, [userId]);
 
   useEffect(() => {
     (async () => {

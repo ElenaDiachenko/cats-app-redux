@@ -6,38 +6,38 @@ import { FaRegHeart } from 'react-icons/fa';
 
 export const NavLikes = () => {
   const activeClassName =
-    'bg-red-500 p-1.5 rounded flex justify-center items-center';
+    'bg-red-500 p-1.5 rounded flex justify-center items-center ';
   return (
     <div className="flex gap-x-4 mr-2">
       <NavLink
         className={({ isActive }) =>
           isActive
             ? activeClassName
-            : 'p-1.5 rounded flex justify-center items-center'
+            : 'w-[40px] h-[40px] rounded bg-green-400 flex justify-center items-center  hover:opacity-50 cursor-pointer'
         }
         to="/likes"
       >
-        <CiFaceSmile size={20} />
+        <CiFaceSmile size={30} />
       </NavLink>
       <NavLink
         className={({ isActive }) =>
           isActive
             ? activeClassName
-            : 'p-1.5 rounded flex justify-center items-center'
+            : 'w-[40px] h-[40px] rounded bg-red-400 flex justify-center items-center  hover:opacity-50 cursor-pointer'
         }
         to="/favourites"
       >
-        <FaRegHeart size={20} />
+        <FaRegHeart size={30} />
       </NavLink>
       <NavLink
         className={({ isActive }) =>
           isActive
             ? activeClassName
-            : 'p-1.5 rounded flex justify-center items-center'
+            : 'w-[40px] h-[40px] rounded  bg-yellow-400 flex justify-center items-center hover:opacity-50 cursor-pointer'
         }
         to="/dislikes"
       >
-        <CgSmileSad size={20} />
+        <CgSmileSad size={30} />
       </NavLink>
     </div>
   );

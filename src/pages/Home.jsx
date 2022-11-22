@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { nanoid } from 'nanoid';
 import Select from 'react-select';
 import { MasonryGallery } from '../components/MasonryGallery';
 import { requests } from '../servises/API';
@@ -8,6 +9,9 @@ import { Pagination } from '../components/Pagination';
 import { LoaderSpinner } from '../components/LoaderSpinner';
 
 const Home = () => {
+  const [userId] = useState(
+    JSON.parse(localStorage.getItem('catsapi_userId')) ?? nanoid(),
+  );
   const { breeds, isLoading, error } = useGetBreeds();
   const [isLoadingGallery, setIsLoadingGallery] = useState(false);
   const [errorGallery, setErrorGallery] = useState(false);
@@ -19,16 +23,45 @@ const Home = () => {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(null);
   const breedOptions = useOptions(breeds, 'all', 'All Breeds');
-  const [favourite] = useState(true);
+  const [favouriteBtn] = useState(true);
+  const [favouriteList, setFavouriteList] = useState([]);
+  const [favourite, setFavourite] = useState('');
 
   useEffect(() => {
-    if (!breeds.length) return;
+    localStorage.setItem('catsapi_userId', JSON.stringify(userId));
+  }, [userId]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const result = await requests.getFavourites(userId);
+
+        setFavouriteList(result);
+      } catch (error) {
+        console.error(error.message);
+      }
+    })();
+  }, [userId, favourite]);
+  /// show images
+
+  useEffect(() => {
+    if (!breeds.length && !favouriteList.length) return;
     (async () => {
       setIsLoadingGallery(true);
       setTotal(null);
       try {
         const res = await requests.getImages(order, type, breed, limit, page);
-        setShownPhotos(res.data);
+        let compareRes = [];
+        res.data.forEach((item1) => {
+          favouriteList.forEach((item) => {
+            if (item.image_id === item1.id) {
+              item1 = { ...item1, favourite: true };
+            }
+          });
+          compareRes.push(item1);
+        });
+
+        setShownPhotos(compareRes);
         setTotal(+res.headers['pagination-count']);
       } catch (error) {
         setErrorGallery(true);
@@ -37,8 +70,36 @@ const Home = () => {
         setIsLoadingGallery(false);
       }
     })();
-  }, [breed, limit, order, type, page, breeds]);
+  }, [breed, limit, order, type, page, breeds, favourite, favouriteList]);
 
+  const toggleFavourite = async (id) => {
+    const filter = await favouriteList.find((it) => it.image_id === id);
+    if (filter === undefined) {
+      (() => {
+        try {
+          const favourite = {
+            image_id: id,
+            sub_id: userId,
+          };
+          requests.addFavourite(favourite);
+          setFavourite(nanoid());
+        } catch (error) {
+          console.log(error);
+        }
+      })();
+    } else {
+      (() => {
+        try {
+          requests.removeFavourite(filter.id);
+          setFavourite(nanoid());
+        } catch (error) {
+          console.log(error);
+        }
+      })();
+    }
+  };
+
+  //////
   useEffect(() => {
     window.scrollTo({
       behavior: 'smooth',
@@ -47,6 +108,7 @@ const Home = () => {
   }, [page]);
 
   const paginate = (pageNumber) => setPage(pageNumber);
+
   const selectClassName =
     'focus:outline-0 w-full md:w-[50%] font-bold text-gray-900 dark:text-white bg-gray-50 border border-gray-300 focus:border-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-100';
 
@@ -121,7 +183,11 @@ const Home = () => {
           )}
 
           {shownPhotos.length > 0 && !isLoadingGallery && (
-            <MasonryGallery photos={shownPhotos} favourite={favourite} />
+            <MasonryGallery
+              photos={shownPhotos}
+              favouriteBtn={favouriteBtn}
+              handleFavourite={toggleFavourite}
+            />
           )}
 
           {total > limit && !isLoadingGallery && (

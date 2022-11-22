@@ -35,9 +35,14 @@ const addFavourite = async (favourite) => {
   return res.data;
 };
 
-const getFavourites = async (userId) => {
+const removeFavourite = async (favouriteId) => {
+  const res = await axios.delete(`/favourites/${favouriteId}`);
+  return res;
+};
+
+const getFavourites = async (userId, limit = 10) => {
   const res = await axios.get(
-    `/favourites?sub_id=${userId}&limit=10&order=DESC`,
+    `/favourites?sub_id=${userId}&limit=${limit}&order=DESC`,
   );
   return res.data;
 };
@@ -69,6 +74,7 @@ export const requests = {
   addFavourite,
   getVoteList,
   getFavourites,
+  removeFavourite,
   getBreeds,
   getBreedById,
   getBreedDetails,

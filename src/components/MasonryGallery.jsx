@@ -12,7 +12,7 @@ export const MasonryGallery = ({
 }) => {
   return (
     <ResponsiveMasonry
-      className="mt-6"
+      className="mt-6 h-[100vh]"
       columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}
     >
       <Masonry gutter="20px">

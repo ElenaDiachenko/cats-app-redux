@@ -59,12 +59,16 @@ export const MasonryGallery = ({
             ))
           : photos.map((photo) => (
               <div className="relative" key={photo.id}>
-                <img className="rounded w-full block" src={photo?.url} alt="" />
-                {photo.name && (
+                <img
+                  className="rounded w-full block"
+                  src={photo?.image?.url}
+                  alt=""
+                />
+                {/* {photo.name && (
                   <p className="absolute bottom-0 left-0 w-full text-center rounded-b text-white bg-black/50 py-3 font-bold">
                     {photo.name}
                   </p>
-                )}
+                )} */}
               </div>
             ))}
 

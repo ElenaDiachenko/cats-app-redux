@@ -47,8 +47,10 @@ const getFavourites = async (userId, limit = 10) => {
   return res.data;
 };
 
-const getVoteList = async (userId) => {
-  const res = await axios.get(`/votes?sub_id=${userId}&limit=10&order=DESC`);
+const getVoteList = async (userId, limit = 10) => {
+  const res = await axios.get(
+    `/votes?sub_id=${userId}&limit=${limit}&order=DESC`,
+  );
   return res.data;
 };
 

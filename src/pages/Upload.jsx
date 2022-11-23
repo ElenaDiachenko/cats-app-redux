@@ -48,7 +48,7 @@ const Upload = () => {
     <div className="flex flex-col gap-y-4">
       <BackLink to={location.state?.from ?? '/breeds'}>Go Back</BackLink>
       <form className="mb-4 mx-auto" onSubmit={handleSubmit}>
-        <div className="flex gap-x-4">
+        <div className="flex gap-x-6">
           <button
             type="button"
             className="px-6 h-[50px] text-sm text-gray-900 bg-gray-50 border border-gray-300  dark:bg-gray-700 dark:border-gray-600  dark:text-white flex justify-center items-center hover:opacity-50"
@@ -94,7 +94,7 @@ const Upload = () => {
             />
           ))
         ) : (
-          <p className="text-xl lg:text-2xl font-bold">Download image</p>
+          <p className="text-xl lg:text-2xl font-bold">Add image</p>
         )}
       </div>
     </div>

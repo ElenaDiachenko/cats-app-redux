@@ -23,13 +23,12 @@ const Upload = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(e.target.elements[0].files[0]);
     const file = e.target.elements[0].files[0];
     let formData = new FormData();
     formData.append('file', file);
     try {
-      const result = await requests.uploadImage(formData);
-      console.log(result);
+      await requests.uploadImage(formData);
+      setImageURLs([]);
     } catch (error) {
       console.error(error.message);
     }
@@ -38,46 +37,53 @@ const Upload = () => {
   return (
     <div className="flex flex-col gap-y-4">
       <BackLink to={location.state?.from ?? '/breeds'}>Go Back</BackLink>
-      <div>
-        <div>
-          <div>
-            <form onSubmit={handleSubmit}>
-              <div className="flex gap-x-4">
-                <button
-                  className="px-6 h-[50px] text-sm text-gray-900 bg-gray-50 border border-gray-300  dark:bg-gray-700 dark:border-gray-600  dark:text-white flex justify-center items-center hover:opacity-50"
-                  onClick={() => inputFileRef.current.click()}
-                >
-                  <BiImageAdd className="mr-3" size={35} /> ADD IMAGE
-                </button>
-                <button
-                  className="px-6 h-[50px] text-sm text-gray-900 bg-gray-50 border border-gray-300  dark:bg-gray-700 dark:border-gray-600  dark:text-white flex justify-center items-center hover:opacity-50"
-                  type="submit"
-                >
-                  <FaCloudUploadAlt className="mr-3" size={35} /> UPLOAD
-                </button>
-              </div>
-              <input
-                ref={inputFileRef}
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  setImages([...e.target.files]);
-                }}
-                hidden
-              />
-            </form>
-          </div>
+      <form className="mb-4 mx-auto" onSubmit={handleSubmit}>
+        <div className="flex gap-x-4">
+          <button
+            className="px-6 h-[50px] text-sm text-gray-900 bg-gray-50 border border-gray-300  dark:bg-gray-700 dark:border-gray-600  dark:text-white flex justify-center items-center hover:opacity-50"
+            onClick={() => inputFileRef.current.click()}
+          >
+            <BiImageAdd className="mr-3" size={35} /> ADD IMAGE
+          </button>
+          <button
+            className="px-6 h-[50px] text-sm text-gray-900 bg-gray-50 border border-gray-300  dark:bg-gray-700 dark:border-gray-600  dark:text-white flex justify-center items-center hover:opacity-50"
+            type="submit"
+          >
+            <FaCloudUploadAlt className="mr-3" size={35} /> UPLOAD
+          </button>
         </div>
+        <input
+          ref={inputFileRef}
+          type="file"
+          accept="image/*"
+          onChange={(e) => {
+            setImages([...e.target.files]);
+          }}
+          hidden
+        />
+      </form>
 
-        <div>
-          <button onClick={() => setImageURLs([])}>
+      <div className=" relative rounded mx-auto flex  justify-center items-center bg-gray-200 dark:bg-slate-600 w-full md:w-[70%] h-[70vh]">
+        {imageURLs.length ? (
+          <button
+            className="absolute top-4 right-4 p-1 text-gray-900 bg-gray-50 border border-gray-300  dark:bg-gray-700 dark:border-gray-600  dark:text-white flex justify-center items-center hover:opacity-50"
+            onClick={() => setImageURLs([])}
+          >
             <RiDeleteBin6Fill size={35} />
           </button>
-
-          {imageURLs.map((imageSrc) => (
-            <img key={imageSrc} src={imageSrc} alt="upload_image" />
-          ))}
-        </div>
+        ) : null}
+        {imageURLs.length ? (
+          imageURLs.map((imageSrc) => (
+            <img
+              className="w-full h-full block object-cover"
+              key={imageSrc}
+              src={imageSrc}
+              alt="upload_image"
+            />
+          ))
+        ) : (
+          <p className="text-xl lg:text-2xl font-bold">Download image</p>
+        )}
       </div>
     </div>
   );

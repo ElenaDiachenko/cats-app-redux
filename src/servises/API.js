@@ -67,6 +67,13 @@ const getBreedDetails = async (id) => {
   return res;
 };
 
+const uploadImage = async (formData) => {
+  const res = await axios.post(`/images/upload`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+  return res.data;
+};
+
 export const requests = {
   getImages,
   getImageToVote,
@@ -78,4 +85,5 @@ export const requests = {
   getBreeds,
   getBreedById,
   getBreedDetails,
+  uploadImage,
 };

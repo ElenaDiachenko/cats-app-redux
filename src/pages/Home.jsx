@@ -174,7 +174,6 @@ const Home = () => {
               <NavLink to="/upload">
                 <div
                   type=""
-                  onClick={() => {}}
                   className="px-4 h-[50px] text-sm text-gray-900 bg-gray-50 border border-gray-300  dark:bg-gray-700 dark:border-gray-600  dark:text-white flex justify-center items-center hover:opacity-50"
                 >
                   <FaCloudUploadAlt className="mr-3" size={35} /> UPLOAD

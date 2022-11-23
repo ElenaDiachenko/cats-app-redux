@@ -1,12 +1,14 @@
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import { Link } from 'react-router-dom';
 import { FaRegHeart, FaHeart } from 'react-icons/fa';
+import { RiDeleteBin6Fill } from 'react-icons/ri';
 
 export const MasonryGallery = ({
   photos,
   link,
   favouriteBtn,
   handleFavourite,
+  removeVote,
 }) => {
   return (
     <ResponsiveMasonry
@@ -64,11 +66,12 @@ export const MasonryGallery = ({
                   src={photo?.image?.url}
                   alt=""
                 />
-                {/* {photo.name && (
-                  <p className="absolute bottom-0 left-0 w-full text-center rounded-b text-white bg-black/50 py-3 font-bold">
-                    {photo.name}
-                  </p>
-                )} */}
+                <p className="absolute top-4 right-4 p-2 rounded text-gray-900 bg-gray-100 border border-gray-300  dark:bg-gray-700 dark:border-gray-600  dark:text-white flex justify-center items-center hover:opacity-50">
+                  <RiDeleteBin6Fill
+                    size={35}
+                    onClick={() => removeVote(photo.id)}
+                  />
+                </p>
               </div>
             ))}
 

@@ -30,6 +30,11 @@ const addVote = async (vote) => {
   return res.data;
 };
 
+const removeVote = async (id) => {
+  const res = await axios.delete(`/votes/${id}`);
+  return res.data;
+};
+
 const addFavourite = async (favourite) => {
   const res = await axios.post('/favourites', favourite);
   return res.data;
@@ -85,6 +90,7 @@ export const requests = {
   getImages,
   getImageToVote,
   addVote,
+  removeVote,
   addFavourite,
   getVoteList,
   getFavourites,

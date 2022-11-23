@@ -9,6 +9,7 @@ const Dislikes = () => {
   const [dislikes, setDislikes] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [selectedVote, setSelectedVote] = useState('');
 
   useEffect(() => {
     (async () => {
@@ -26,7 +27,17 @@ const Dislikes = () => {
         setIsLoading(false);
       }
     })();
-  }, [userId]);
+  }, [userId, selectedVote]);
+
+  const removeVote = async (id) => {
+    try {
+      const res = await requests.removeVote(id);
+      setSelectedVote(id);
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div>
@@ -36,7 +47,7 @@ const Dislikes = () => {
         </div>
       )}
       {error && <p>Something went wrong</p>}
-      <MasonryGallery photos={dislikes} />
+      <MasonryGallery photos={dislikes} removeVote={removeVote} />
     </div>
   );
 };

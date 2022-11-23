@@ -4,10 +4,12 @@ import { FaCloudUploadAlt } from 'react-icons/fa';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { useLocation } from 'react-router-dom';
 import { requests } from '../servises/API';
-
+import { LoaderSpinner } from '../components/LoaderSpinner';
 import { BackLink } from '../components/BackLink';
 
 const Upload = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
   const [userId] = useState(JSON.parse(localStorage.getItem('catsapi_userId')));
   const inputFileRef = useRef(null);
   const [images, setImages] = useState([]);
@@ -15,7 +17,9 @@ const Upload = () => {
   const location = useLocation();
 
   useEffect(() => {
-    if (images.length < 1) return;
+    if (images.length < 1) {
+      setImageURLs([]);
+    }
     const newImagesURLs = [];
 
     images.forEach((image) => newImagesURLs.push(URL.createObjectURL(image)));
@@ -29,11 +33,14 @@ const Upload = () => {
     formData.append('file', file);
     formData.append('sub_id', userId);
     try {
-      const res = await requests.uploadImage(formData);
-      console.log(res);
-      setImageURLs([]);
+      setIsLoading(true);
+      await requests.uploadImage(formData);
+      setImages([]);
+      setIsLoading(false);
     } catch (error) {
       console.error(error.message);
+      setIsLoading(false);
+      setError(true);
     }
   };
 
@@ -43,6 +50,7 @@ const Upload = () => {
       <form className="mb-4 mx-auto" onSubmit={handleSubmit}>
         <div className="flex gap-x-4">
           <button
+            type="button"
             className="px-6 h-[50px] text-sm text-gray-900 bg-gray-50 border border-gray-300  dark:bg-gray-700 dark:border-gray-600  dark:text-white flex justify-center items-center hover:opacity-50"
             onClick={() => inputFileRef.current.click()}
           >
@@ -65,11 +73,12 @@ const Upload = () => {
           hidden
         />
       </form>
-
+      {isLoading && <LoaderSpinner />}
+      {error && <p>Something went wrong</p>}
       <div className=" relative rounded mx-auto flex  justify-center items-center bg-gray-200 dark:bg-slate-600 w-full md:w-[70%] h-[70vh]">
         {imageURLs.length ? (
           <button
-            className="absolute top-4 right-4 p-1 text-gray-900 bg-gray-50 border border-gray-300  dark:bg-gray-700 dark:border-gray-600  dark:text-white flex justify-center items-center hover:opacity-50"
+            className="absolute top-4 right-4 p-2 rounded text-gray-900 bg-gray-50 border border-gray-300  dark:bg-gray-700 dark:border-gray-600  dark:text-white flex justify-center items-center hover:opacity-50"
             onClick={() => setImages([])}
           >
             <RiDeleteBin6Fill size={35} />

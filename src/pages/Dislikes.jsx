@@ -10,16 +10,21 @@ const Dislikes = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const [selectedVote, setSelectedVote] = useState('');
+  const [limit] = useState(10);
+  const [total, setTotal] = useState(null);
+  const [page, setPage] = useState(1);
+  const [currentPhotos, setCurrentPhotos] = useState([]);
 
   useEffect(() => {
     (async () => {
       try {
         setIsLoading(true);
-        const votesList = await requests.getVoteList(userId);
+        const votesList = await requests.getVoteList(userId, 100);
 
         const filteredResult = votesList.filter((item) => item.value === -1);
         setDislikes(filteredResult);
-        console.log(filteredResult);
+        setTotal(filteredResult.length);
+        setPage(1);
       } catch (error) {
         console.error(error.message);
         setError(true);
@@ -29,16 +34,23 @@ const Dislikes = () => {
     })();
   }, [userId, selectedVote]);
 
+  useEffect(() => {
+    if (!dislikes.length) return;
+    const indexOfLastItem = page * limit;
+    const indexOfFirstItem = indexOfLastItem - limit;
+    setCurrentPhotos(dislikes.slice(indexOfFirstItem, indexOfLastItem));
+  }, [dislikes, limit, page]);
+
   const removeVote = async (id) => {
     try {
-      const res = await requests.removeVote(id);
+      await requests.removeVote(id);
       setSelectedVote(id);
-      console.log(res);
     } catch (error) {
       console.log(error);
     }
   };
 
+  const paginate = (pageNumber) => setPage(pageNumber);
   return (
     <div>
       {isLoading && (
@@ -47,7 +59,21 @@ const Dislikes = () => {
         </div>
       )}
       {error && <p>Something went wrong</p>}
-      <MasonryGallery photos={dislikes} removeVote={removeVote} />
+      {!isLoading ? (
+        <MasonryGallery photos={currentPhotos} removeVote={removeVote} />
+      ) : null}
+
+      {total > limit && (
+        <Pagination
+          limit={limit}
+          total={total}
+          paginate={paginate}
+          currentPage={page}
+          buttonConst={3}
+          contentPerPage={5}
+          siblingCount={1}
+        />
+      )}
     </div>
   );
 };

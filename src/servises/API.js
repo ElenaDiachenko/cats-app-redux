@@ -74,6 +74,11 @@ const uploadImage = async (formData) => {
   return res.data;
 };
 
+const getImageAnalsys = async (imageId) => {
+  const res = await axios.post(`/images/${imageId}/analysis`);
+  return res.data;
+};
+
 export const requests = {
   getImages,
   getImageToVote,
@@ -86,4 +91,5 @@ export const requests = {
   getBreedById,
   getBreedDetails,
   uploadImage,
+  getImageAnalsys,
 };

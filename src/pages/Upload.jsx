@@ -8,6 +8,7 @@ import { requests } from '../servises/API';
 import { BackLink } from '../components/BackLink';
 
 const Upload = () => {
+  const [userId] = useState(JSON.parse(localStorage.getItem('catsapi_userId')));
   const inputFileRef = useRef(null);
   const [images, setImages] = useState([]);
   const [imageURLs, setImageURLs] = useState([]);
@@ -23,11 +24,13 @@ const Upload = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const file = e.target.elements[0].files[0];
+    const file = e.target[2].files[0];
     let formData = new FormData();
     formData.append('file', file);
+    formData.append('sub_id', userId);
     try {
-      await requests.uploadImage(formData);
+      const res = await requests.uploadImage(formData);
+      console.log(res);
       setImageURLs([]);
     } catch (error) {
       console.error(error.message);
@@ -67,7 +70,7 @@ const Upload = () => {
         {imageURLs.length ? (
           <button
             className="absolute top-4 right-4 p-1 text-gray-900 bg-gray-50 border border-gray-300  dark:bg-gray-700 dark:border-gray-600  dark:text-white flex justify-center items-center hover:opacity-50"
-            onClick={() => setImageURLs([])}
+            onClick={() => setImages([])}
           >
             <RiDeleteBin6Fill size={35} />
           </button>

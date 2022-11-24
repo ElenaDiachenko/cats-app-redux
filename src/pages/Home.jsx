@@ -36,9 +36,9 @@ const Home = () => {
   useEffect(() => {
     (async () => {
       try {
-        const result = await requests.getFavourites(userId);
+        const res = await requests.getFavourites(userId);
 
-        setFavouriteList(result);
+        setFavouriteList(res.data);
       } catch (error) {
         console.error(error.message);
       }

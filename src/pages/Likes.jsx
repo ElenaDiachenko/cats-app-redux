@@ -41,6 +41,13 @@ const Likes = () => {
     setCurrentPhotos(likes.slice(indexOfFirstItem, indexOfLastItem));
   }, [likes, limit, page]);
 
+  useEffect(() => {
+    window.scrollTo({
+      behavior: 'smooth',
+      top: '0px',
+    });
+  }, [page]);
+
   const removeVote = async (id) => {
     try {
       await requests.removeVote(id);

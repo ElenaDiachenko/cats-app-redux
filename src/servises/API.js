@@ -45,11 +45,11 @@ const removeFavourite = async (favouriteId) => {
   return res;
 };
 
-const getFavourites = async (userId, limit = 10) => {
+const getFavourites = async (userId, limit, page) => {
   const res = await axios.get(
-    `/favourites?sub_id=${userId}&limit=${limit}&order=DESC`,
+    `/favourites?sub_id=${userId}&limit=${limit}&page=${page}`,
   );
-  return res.data;
+  return res;
 };
 
 const getVoteList = async (userId, limit = 10) => {

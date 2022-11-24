@@ -49,6 +49,12 @@ const Dislikes = () => {
       console.log(error);
     }
   };
+  useEffect(() => {
+    window.scrollTo({
+      behavior: 'smooth',
+      top: '0px',
+    });
+  }, [page]);
 
   const paginate = (pageNumber) => setPage(pageNumber);
   return (

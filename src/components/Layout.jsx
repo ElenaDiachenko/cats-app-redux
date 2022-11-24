@@ -13,37 +13,37 @@ const Layout = () => {
   const onToggle = () => dispatch(toggleTheme());
 
   return (
-    <div className="dark:bg-gray-800 dark:text-white min-h-screen px-4 lg:px-12 ">
-      <header className="mb-4">
-        <nav
-          className="border-b border-gray-200 border-opacity-25 py-2.5 flex
+    <div className=" dark:bg-gray-800 dark:text-white min-h-screen px-4 lg:px-12 ">
+        <header className="mb-4">
+          <nav
+            className="border-b border-gray-200 border-opacity-25 py-2.5 flex
           justify-between
         "
-        >
-          <div className="flex gap-x-4 p-4  items-center font-bold text-xl">
-            <NavMenu />
-          </div>
-          <div className="flex items-center lg:order-2">
-            <NavLikes />
-            {!darkTheme ? (
-              <BsFillMoonFill
-                onClick={() => onToggle()}
-                size={30}
-                className="rounded bg-transparent flex justify-center items-center  hover:opacity-50 cursor-pointer"
-              />
-            ) : (
-              <BsSun
-                onClick={() => onToggle()}
-                size={30}
-                className="rounded bg-transparent flex justify-center items-center  hover:opacity-50 cursor-pointer"
-              />
-            )}
-          </div>
-        </nav>
-      </header>
-      <Suspense fallback={<LoaderSpinner />}>
-        <Outlet />
-      </Suspense>
+          >
+            <div className="flex gap-x-4 p-4  items-center font-bold text-xl">
+              <NavMenu />
+            </div>
+            <div className="flex items-center lg:order-2">
+              <NavLikes />
+              {!darkTheme ? (
+                <BsFillMoonFill
+                  onClick={() => onToggle()}
+                  size={30}
+                  className="rounded bg-transparent flex justify-center items-center  hover:opacity-50 cursor-pointer"
+                />
+              ) : (
+                <BsSun
+                  onClick={() => onToggle()}
+                  size={30}
+                  className="rounded bg-transparent flex justify-center items-center  hover:opacity-50 cursor-pointer"
+                />
+              )}
+            </div>
+          </nav>
+        </header>
+        <Suspense fallback={<LoaderSpinner />}>
+          <Outlet />
+        </Suspense>
     </div>
   );
 };

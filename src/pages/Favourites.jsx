@@ -65,7 +65,7 @@ const Favourites = () => {
         />
       ) : null}
 
-      {!isLoading && total > limit && (
+      {total > limit && (
         <Pagination
           limit={limit}
           total={total}

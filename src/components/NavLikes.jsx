@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { CiFaceSmile } from 'react-icons/ci';
-import { CgSmileSad } from 'react-icons/cg';
+import { BsEmojiSmile } from 'react-icons/bs';
+import { ImSad } from 'react-icons/im';
 import { FaRegHeart } from 'react-icons/fa';
 
 export const NavLikes = () => {
@@ -17,7 +17,7 @@ export const NavLikes = () => {
         }
         to="/likes"
       >
-        <CiFaceSmile size={30} />
+        <BsEmojiSmile size={30} />
       </NavLink>
       <NavLink
         className={({ isActive }) =>
@@ -37,7 +37,7 @@ export const NavLikes = () => {
         }
         to="/dislikes"
       >
-        <CgSmileSad size={30} />
+        <ImSad size={30} />
       </NavLink>
     </div>
   );

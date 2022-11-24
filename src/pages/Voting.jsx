@@ -27,8 +27,7 @@ const Voting = () => {
       try {
         const favouriteList = await requests.getFavourites(userId);
         const votesList = await requests.getVoteList(userId);
-
-        const result = [...favouriteList, ...votesList];
+        const result = [...favouriteList.data, ...votesList];
 
         const sortedResult = [...result].sort(
           (a, b) =>

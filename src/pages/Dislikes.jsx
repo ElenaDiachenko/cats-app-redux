@@ -69,7 +69,7 @@ const Dislikes = () => {
         <MasonryGallery photos={currentPhotos} removeVote={removeVote} />
       ) : null}
 
-      {total > limit && (
+      {!isLoading && total > limit && (
         <Pagination
           limit={limit}
           total={total}

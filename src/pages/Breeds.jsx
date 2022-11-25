@@ -123,7 +123,7 @@ const Breeds = () => {
             <MasonryGallery photos={currentPhotos} link={link} />
           )}
 
-          {total > limit && (
+          {total > limit && currentPhotos > 1 && (
             <Pagination
               limit={limit}
               total={total}

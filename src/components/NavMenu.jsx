@@ -1,9 +1,12 @@
 import { NavLink } from 'react-router-dom';
+import { FaPaw } from 'react-icons/fa';
+import { AiOutlineHome } from 'react-icons/ai';
+import { CgCheckO } from 'react-icons/cg';
 
 const links = [
-  { title: 'Home', path: '/' },
-  { title: 'Voting', path: '/voting' },
-  { title: 'Breeds', path: '/breeds' },
+  { title: 'Home', path: '/', icon: <AiOutlineHome size={30} /> },
+  { title: 'Voting', path: '/voting', icon: <CgCheckO size={30} /> },
+  { title: 'Breeds', path: '/breeds', icon: <FaPaw size={30} /> },
 ];
 
 export const NavMenu = () => {
@@ -16,7 +19,8 @@ export const NavMenu = () => {
           key={link.path}
           to={link.path}
         >
-          {link.title}
+          <span className="hidden md:inline-block"> {link.title}</span>
+          <span className="inline-block md:hidden">{link.icon}</span>
         </NavLink>
       ))}
     </>

@@ -27,7 +27,7 @@ const Home = () => {
   const breedOptions = useOptions(breeds, 'all', 'All Breeds');
   const [favouriteBtn] = useState(true);
   const [favouriteList, setFavouriteList] = useState([]);
-  const [favourite, setFavourite] = useState('');
+  const [favourite, setFavourite] = useState(null);
 
   useEffect(() => {
     localStorage.setItem('catsapi_userId', JSON.stringify(userId));

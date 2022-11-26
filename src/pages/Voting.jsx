@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { requests } from '../servises/API';
-import { CiFaceSmile } from 'react-icons/ci';
-import { CgSmileSad } from 'react-icons/cg';
+import { BsEmojiSmile } from 'react-icons/bs';
+import { ImSad } from 'react-icons/im';
 import { FaRegHeart } from 'react-icons/fa';
 
 const Voting = () => {
@@ -83,7 +83,7 @@ const Voting = () => {
               onClick={() => handleVote(currentImage?.id, 1)}
               className="w-[40px] h-[40px] rounded bg-green-400 flex justify-center items-center"
             >
-              <CiFaceSmile size={35} />
+              <BsEmojiSmile size={35} />
             </button>
             <button
               onClick={() => handleFavourite(currentImage?.id)}
@@ -95,7 +95,7 @@ const Voting = () => {
               onClick={() => handleVote(currentImage?.id, -1)}
               className="w-[40px] h-[40px] rounded bg-yellow-400 flex justify-center items-center"
             >
-              <CgSmileSad size={35} />
+              <ImSad size={35} />
             </button>
           </div>
         </div>
@@ -123,11 +123,11 @@ const Voting = () => {
 
               {it.value === 1 ? (
                 <div className="w-[40px] h-[40px] rounded bg-green-400 flex justify-center items-center text-white">
-                  <CiFaceSmile size={35} />
+                  <BsEmojiSmile size={35} />
                 </div>
               ) : it.value === -1 ? (
                 <div className="w-[40px] h-[40px] rounded bg-yellow-400 flex justify-center items-center text-white">
-                  <CgSmileSad size={35} />
+                  <ImSad size={35} />
                 </div>
               ) : (
                 <div className="w-[40px] h-[40px] rounded bg-red-400 flex justify-center items-center text-white">

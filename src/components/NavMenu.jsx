@@ -19,8 +19,8 @@ export const NavMenu = () => {
           key={link.path}
           to={link.path}
         >
-          <span className="hidden md:inline-block"> {link.title}</span>
-          <span className="inline-block md:hidden">{link.icon}</span>
+          <span className="hidden sm:inline-block"> {link.title}</span>
+          <span className="inline-block sm:hidden">{link.icon}</span>
         </NavLink>
       ))}
     </>

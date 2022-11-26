@@ -1,15 +1,15 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-
+import { lazy } from 'react';
 import Layout from './components/Layout';
-import Home from './pages/Home';
-import Voting from './pages/Voting';
-import Breeds from './pages/Breeds';
-import Upload from './pages/Upload';
-import Likes from './pages/Likes';
-import Favourites from './pages/Favourites';
-import Dislikes from './pages/Dislikes';
-import BreedDetails from './pages/BreedDetails';
+const Home = lazy(() => import('./pages/Home'));
+const Voting = lazy(() => import('./pages/Voting'));
+const Breeds = lazy(() => import('./pages/Breeds'));
+const Upload = lazy(() => import('./pages/Upload'));
+const Likes = lazy(() => import('./pages/Likes'));
+const Favourites = lazy(() => import('./pages/Favourites'));
+const Dislikes = lazy(() => import('./pages/Dislikes'));
+const BreedDetails = lazy(() => import('./pages/BreedDetails'));
 
 function App() {
   const { darkTheme } = useSelector((state) => state);

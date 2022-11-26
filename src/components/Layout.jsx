@@ -13,7 +13,7 @@ const Layout = () => {
   const onToggle = () => dispatch(toggleTheme());
 
   return (
-    <div className=" dark:bg-gray-800 dark:text-white min-h-screen  ">
+    <div className="bg-zinc-200 dark:bg-gray-800 dark:text-white min-h-screen  ">
       <div className="max-w-[1400px] mx-auto px-4 lg:px-12">
         <header className="mb-4">
           <nav

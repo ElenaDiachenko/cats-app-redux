@@ -73,7 +73,7 @@ const Voting = () => {
     <div className="flex flex-col gap-y-4 lg:flex lg:flex-row lg:gap-x-4">
       <div className="relative w-full h-[90vh] lg:w-[50%]">
         <img
-          className="w-full h-full block object-cover"
+          className="w-full h-full block object-cover rounded"
           src={currentImage?.url}
           alt={currentImage?.id}
         />
@@ -105,7 +105,7 @@ const Voting = () => {
           userActions.map((it) => (
             <div
               key={it.id}
-              className="flex  justify-between items-center p-3 rounded  bg-gray-200 dark:bg-slate-600"
+              className="flex  justify-between items-center p-3 rounded  bg-white dark:bg-slate-600"
             >
               <div className="flex gap-x-3">
                 <p className="font-bold">{it.created_at.slice(11, 16)}</p>

@@ -20,6 +20,7 @@ export const useGetBreeds = () => {
       }
     })();
   }, []);
+
   return {
     breeds,
     isLoading,

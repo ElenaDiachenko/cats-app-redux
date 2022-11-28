@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { nanoid } from 'nanoid';
 import { NavLink } from 'react-router-dom';
 import { FaCloudUploadAlt } from 'react-icons/fa';
@@ -44,6 +44,7 @@ const Home = () => {
       }
     })();
   }, [userId, favourite]);
+
   /// show images
 
   useEffect(() => {
@@ -74,33 +75,34 @@ const Home = () => {
     })();
   }, [breed, limit, order, type, page, breeds, favourite, favouriteList]);
 
-  const toggleFavourite = async (id) => {
-    const filter = await favouriteList.find((it) => it.image_id === id);
-    if (filter === undefined) {
-      (() => {
-        try {
-          const favourite = {
-            image_id: id,
-            sub_id: userId,
-          };
-          requests.addFavourite(favourite);
-          setFavourite(nanoid());
-        } catch (error) {
-          console.log(error);
-        }
-      })();
-    } else {
-      (() => {
-        try {
-          requests.removeFavourite(filter.id);
-          setFavourite(nanoid());
-        } catch (error) {
-          console.log(error);
-        }
-      })();
-    }
-  };
-
+  const toggleFavourite = useCallback(() => {
+    (async (id) => {
+      const filter = await favouriteList.find((it) => it.image_id === id);
+      if (filter === undefined) {
+        (() => {
+          try {
+            const favourite = {
+              image_id: id,
+              sub_id: userId,
+            };
+            requests.addFavourite(favourite);
+            setFavourite(nanoid());
+          } catch (error) {
+            console.log(error);
+          }
+        })();
+      } else {
+        (() => {
+          try {
+            requests.removeFavourite(filter.id);
+            setFavourite(nanoid());
+          } catch (error) {
+            console.log(error);
+          }
+        })();
+      }
+    })();
+  }, [favouriteList, userId]);
   //////
   useEffect(() => {
     window.scrollTo({
@@ -154,13 +156,15 @@ const Home = () => {
             </div>
           )}
 
-          {shownPhotos.length > 0 && !isLoadingGallery && (
-            <MasonryGallery
-              photos={shownPhotos}
-              favouriteBtn={favouriteBtn}
-              handleFavourite={toggleFavourite}
-            />
-          )}
+          {shownPhotos.length > 0 &&
+            !isLoadingGallery &&
+            favouriteList.length && (
+              <MasonryGallery
+                photos={shownPhotos}
+                favouriteBtn={favouriteBtn}
+                handleFavourite={toggleFavourite}
+              />
+            )}
 
           {total > limit && !isLoadingGallery && (
             <Pagination

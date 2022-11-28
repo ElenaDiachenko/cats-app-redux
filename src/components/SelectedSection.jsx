@@ -13,7 +13,6 @@ export const SelectedSection = ({
   setOrder,
   setType,
 }) => {
-  console.log(breedOptions);
   return (
     <>
       <div className="flex justify-between  w-full gap-x-3">

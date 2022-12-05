@@ -21,7 +21,6 @@ const Home = () => {
   const [userId] = useState(
     JSON.parse(localStorage.getItem('catsapi_userId')) ?? nanoid(),
   );
-
   const [order, setOrder] = useState('desc');
   const [type, setType] = useState('gif,jpg,png');
   const [breed, setBreed] = useState('');

@@ -1,60 +1,32 @@
 import { useState, useEffect } from 'react';
 import Select from 'react-select';
-// import { useDispatch } from 'react-redux';
-// import { getAllBreeds } from '../redux/breed/breedsSlice';
-// import { useGetBreedsQuery } from '../redux/breed/breedsApiSlice';
 import { Searchbar } from '../components/Searchbar';
 import { Pagination } from '../components/Pagination';
 import { selectOptions } from '../utilities/options';
-import { useOptions, useGetBreeds } from '../hooks';
+import { useOptions } from '../hooks';
 import { MasonryGallery } from '../components/MasonryGallery';
-// import { requests } from '../servises/API';
 import { LoaderSpinner } from '../components/LoaderSpinner';
+import { useGetBreedListQuery } from '../redux/cats';
 
 const Breeds = () => {
-  const { breeds, isLoading, error } = useGetBreeds();
-  // const [selectedBreed, setSelectedBreed] = useState([]);
   const [query, setQuery] = useState(null);
   const [limit, setLimit] = useState(10);
   const [shownPhotos, setShownPhotos] = useState([]);
   const [currentPhotos, setCurrentPhotos] = useState([]);
-  // const [totalBreedQuery, setTotalBreedQuery] = useState(null);
   const [total, setTotal] = useState(null);
   const [link] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const {
+    data: breeds = [],
+    error,
+    isLoading,
+    isSuccess,
+    isError,
+  } = useGetBreedListQuery();
   const breedOptions = useOptions(breeds, 'all', 'All Breeds');
 
-  // useEffect(() => {
-  //   if (!query) return;
-  //   (async () => {
-  //     try {
-  //       const res = await requests.getBreedById(query, 30);
-  //       setSelectedBreed(res.data);
-  //       setTotalBreedQuery(+res.headers['pagination-count']);
-  //     } catch (error) {
-  //       console.log(error.message);
-  //     }
-  //   })();
-  // }, [query, limit]);
-
-  // useEffect(() => {
-  //   if (!breeds.length) return;
-
-  //   if (query === null || query === 'all') {
-  //     setShownPhotos(breeds);
-  //     setTotal(breeds.length);
-  //     setCurrentPage(1);
-  //     return;
-  //   }
-
-  //   setShownPhotos(selectedBreed);
-  //   setTotal(totalBreedQuery);
-  //   setCurrentPage(1);
-  // }, [breeds, query, selectedBreed, totalBreedQuery]);
-
-  ///////////////////////////////////////////////
   useEffect(() => {
-    if (!breeds.length) return;
+    if (!isSuccess) return;
 
     if (query === null || query === 'all') {
       setShownPhotos(breeds);
@@ -64,10 +36,10 @@ const Breeds = () => {
     }
     const result = breeds.filter((breed) => breed.id === query);
     setShownPhotos(result);
-  }, [breeds, limit, query]);
+  }, [breeds, isSuccess, query]);
 
   useEffect(() => {
-    if (!shownPhotos.length > 0) return;
+    if (!shownPhotos.length) return;
     const indexOfLastItem = currentPage * limit;
     const indexOfFirstItem = indexOfLastItem - limit;
     setCurrentPhotos(shownPhotos.slice(indexOfFirstItem, indexOfLastItem));
@@ -90,9 +62,9 @@ const Breeds = () => {
           <LoaderSpinner />
         </div>
       )}
-      {error && <p>Something went wrong</p>}
+      {isError && <p>{error.message}</p>}
 
-      {breeds.length > 0 && (
+      {isSuccess && (
         <>
           <section className=" flex flex-col gap-y-3 md:flex-row md:items-center w-full gap-x-4">
             <Searchbar className="" getQuery={getInputQuery} />

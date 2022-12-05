@@ -8,7 +8,6 @@ import { apiSlice } from './apiSlice';
 export const store = configureStore({
   reducer: {
     darkTheme: themeReducer,
-    // breeds: breedsReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) => [

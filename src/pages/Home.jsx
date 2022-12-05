@@ -1,13 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { nanoid } from 'nanoid';
 import { NavLink } from 'react-router-dom';
 import { FaCloudUploadAlt } from 'react-icons/fa';
 import { MasonryGallery } from '../components/MasonryGallery';
-import { requests } from '../servises/API';
-import { useOptions, useGetBreeds } from '../hooks';
+import { useOptions } from '../hooks';
 import {
   useGetBreedListQuery,
-  useGetAllFavouriteQuery,
   useGetAllImagesQuery,
   useRemoveFavouriteMutation,
   useAddFavouriteMutation,
@@ -22,30 +20,19 @@ const Home = () => {
   const [userId] = useState(
     JSON.parse(localStorage.getItem('catsapi_userId')) ?? nanoid(),
   );
-  // const { breeds, isLoading, error } = useGetBreeds();
 
-  const [isLoadingGallery, setIsLoadingGallery] = useState(false);
-  const [errorGallery, setErrorGallery] = useState(false);
   const [order, setOrder] = useState('rand');
   const [type, setType] = useState('gif,jpg,png');
   const [breed, setBreed] = useState('');
   const [limit, setLimit] = useState(10);
-  const [shownPhotos, setShownPhotos] = useState([]);
   const [page, setPage] = useState(1);
   const [favouriteBtn] = useState(true);
-  // const [favouriteList, setFavouriteList] = useState([]);
-  const [favourite, setFavourite] = useState(null);
   const {
     data: breeds = [],
     error,
-    isFetching: isFetchingBreeds,
+    isLoading: isLoadingBreeds,
     isSuccess: isSuccessBreeds,
   } = useGetBreedListQuery();
-
-  const { data: allFavourites = [], isSuccess: isSuccessFavourites } =
-    useGetAllFavouriteQuery({
-      userId,
-    });
 
   const { images, isSuccessImages, totalCount } = useGetAllImagesQuery(
     {
@@ -54,6 +41,7 @@ const Home = () => {
       breedId: breed,
       limit,
       page,
+      userId,
     },
     {
       selectFromResult: ({ data, error, isLoading, isSuccess }) => ({
@@ -65,6 +53,7 @@ const Home = () => {
       }),
     },
   );
+  console.log(images);
 
   const breedOptions = useOptions(breeds, 'all', 'All Breeds');
 
@@ -72,88 +61,24 @@ const Home = () => {
     localStorage.setItem('catsapi_userId', JSON.stringify(userId));
   }, [userId]);
 
-  const getImageWithFavourite = (images, favourites) => {
-    let result = [];
-    images.forEach((item1) => {
-      favourites.forEach((item) => {
-        if (item.image_id === item1.id) {
-          item1 = { ...item1, favourite: true };
-        }
-      });
-      result.push(item1);
-    });
-
-    return result;
-  };
-
   const [addFavourite] = useAddFavouriteMutation();
   const [removeFavourite] = useRemoveFavouriteMutation();
 
-  useEffect(() => {
-    if (isSuccessImages && isSuccessFavourites) {
-      setIsLoadingGallery(true);
-      const result = getImageWithFavourite(images, allFavourites);
-      setShownPhotos(result);
-      setIsLoadingGallery(false);
-    }
-  }, [allFavourites, images, isSuccessFavourites, isSuccessImages]);
-
-  const toggleFavourite = async (id) => {
-    const filter = await allFavourites.find((it) => it.image_id === id);
-    if (filter === undefined) {
-      (() => {
-        try {
-          const favourite = {
-            image_id: id,
-            sub_id: userId,
-          };
-          addFavourite(favourite);
-          setFavourite(nanoid());
-        } catch (error) {
-          console.log(error);
-        }
-      })();
+  const toggleFavourite = async (photo) => {
+    if (photo.favourite === undefined) {
+      console.log(photo.id);
+      const favourite = {
+        image_id: photo.id,
+        sub_id: userId,
+      };
+      addFavourite(favourite);
     } else {
-      (() => {
-        try {
-          removeFavourite(filter.id);
-          setFavourite(nanoid());
-        } catch (error) {
-          console.log(error);
-        }
-      })();
+      console.log(photo?.favourite.id);
+
+      removeFavourite(photo?.favourite.id);
     }
   };
 
-  // const toggleFavourite = useCallback(() => {
-  //   (async (id) => {
-  //     const filter = await allFavourites.find((it) => it.image_id === id);
-  //     if (filter === undefined) {
-  //       (() => {
-  //         try {
-  //           const favourite = {
-  //             image_id: id,
-  //             sub_id: userId,
-  //           };
-  //           requests.addFavourite(favourite);
-  //           setFavourite(nanoid());
-  //         } catch (error) {
-  //           console.log(error);
-  //         }
-  //       })();
-  //     } else {
-  //       (() => {
-  //         try {
-  //           requests.removeFavourite(filter.id);
-  //           setFavourite(nanoid());
-  //         } catch (error) {
-  //           console.log(error);
-  //         }
-  //       })();
-  //     }
-  //   })();
-  // }, [allFavourites, userId]);
-  //////
   useEffect(() => {
     window.scrollTo({
       behavior: 'smooth',
@@ -165,14 +90,14 @@ const Home = () => {
 
   return (
     <>
-      {isFetchingBreeds && (
+      {isLoadingBreeds && (
         <div className="mt-[100px]">
           <LoaderSpinner />
         </div>
       )}
       {error && <p>Something went wrong</p>}
 
-      {shownPhotos.length > 0 && (
+      {isSuccessImages && isSuccessBreeds && (
         <>
           {selectOptions && (
             <section className=" flex flex-col  gap-y-3 md:flex-row md:items-center md:justify-between md:gap-x-3 ">
@@ -195,21 +120,15 @@ const Home = () => {
               </NavLink>
             </section>
           )}
-          {errorGallery && (
-            <div className="mt-[100px]">
-              <p>Something went wrong</p>
-            </div>
-          )}
-
-          {shownPhotos.length > 0 && (
+          {isSuccessImages && (
             <MasonryGallery
-              photos={shownPhotos}
+              photos={images}
               favouriteBtn={favouriteBtn}
               handleFavourite={toggleFavourite}
             />
           )}
 
-          {totalCount > limit && !isLoadingGallery && (
+          {totalCount > limit && (
             <Pagination
               limit={limit}
               total={totalCount}

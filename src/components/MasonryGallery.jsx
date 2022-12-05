@@ -44,13 +44,13 @@ export const MasonryGallery = ({
                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                     {photo.favourite ? (
                       <FaHeart
-                        onClick={() => handleFavourite(photo.id)}
+                        onClick={() => handleFavourite(photo)}
                         className="fill-red-400 cursor-pointer"
                         size={35}
                       />
                     ) : (
                       <FaRegHeart
-                        onClick={() => handleFavourite(photo.id)}
+                        onClick={() => handleFavourite(photo)}
                         className="fill-red-400 cursor-pointer"
                         size={35}
                       />

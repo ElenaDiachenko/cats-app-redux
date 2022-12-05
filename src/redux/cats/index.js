@@ -1,4 +1,4 @@
-import { useGetBreedListQuery } from './breedsApiSlice';
+import { useGetBreedListQuery, useGetBreedByIdQuery } from './breedsApiSlice';
 import { useGetAllImagesQuery } from './imagesApiSlice';
 import {
   useRemoveFavouriteMutation,
@@ -7,6 +7,7 @@ import {
 
 export {
   useGetBreedListQuery,
+  useGetBreedByIdQuery,
   useGetAllImagesQuery,
   useRemoveFavouriteMutation,
   useAddFavouriteMutation,

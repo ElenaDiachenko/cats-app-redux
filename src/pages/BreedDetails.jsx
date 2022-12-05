@@ -1,46 +1,39 @@
 import { useEffect, useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
-import { useGetBreedListQuery } from '../redux/cats/catsApiSlice';
-import { requests } from '../servises/API';
+import { useGetBreedListQuery, useGetBreedByIdQuery } from '../redux/cats';
+
 import Carousel from '../components/Carousel';
 import { BackLink } from '../components/BackLink';
 import { LoaderSpinner } from '../components/LoaderSpinner';
 
 const BreedDetails = () => {
-  const { data, error, isLoading, isFetching } = useGetBreedListQuery();
   const location = useLocation();
   const { id } = useParams();
-  const [breeds, setBreeds] = useState([]);
   const [breedDescr, setBreedDescr] = useState(null);
+  const {
+    data: breedList = [],
+    isLoading: isLoadingBreedList,
+    isSuccess: isSuccessBreedList,
+    isError: isErrorBreedList,
+  } = useGetBreedListQuery();
+
+  const {
+    data: breeds,
+    isLoading: isLoadingBreeds,
+    isError: isErrorBreeds,
+  } = useGetBreedByIdQuery(id, { skip: !id });
 
   useEffect(() => {
-    (async () => {
-      if (!id) return;
-      try {
-        const res = await requests.getBreedById(id);
-        setBreeds(res.data);
-      } catch (error) {
-        console.log(error.message);
-      }
-    })();
-  }, [id]);
-
-  useEffect(() => {
-    (async () => {
-      if (!data) return;
-      try {
-        const result = await data.find((it) => it.id === id);
-        setBreedDescr(result);
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, [data, id]);
+    if (isSuccessBreedList && id) {
+      const result = breedList.find((it) => it.id === id);
+      setBreedDescr(result);
+    }
+  }, [isSuccessBreedList, id, breedList]);
 
   return (
     <>
-      {error && <p>Something went wrong</p>}
-      {isLoading && isFetching && (
+      {isErrorBreeds && isErrorBreedList && <p>Something went wrong</p>}
+      {isLoadingBreeds && isLoadingBreedList && (
         <div className="mt-[100px]">
           <LoaderSpinner />
         </div>

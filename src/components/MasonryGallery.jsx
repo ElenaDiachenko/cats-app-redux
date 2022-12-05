@@ -66,7 +66,7 @@ export const MasonryGallery = ({
                   src={photo?.image?.url}
                   alt=""
                 />
-                <p className="absolute top-4 right-4 p-2 rounded text-gray-900 bg-gray-100 border border-gray-300  dark:bg-gray-700 dark:border-gray-600  dark:text-white flex justify-center items-center hover:opacity-50">
+                <p className="absolute top-4 right-4 p-1.5 rounded opacity-30 hover:opacity-100 text-gray-900 bg-gray-100 border border-gray-300  dark:bg-gray-700 dark:border-gray-600  dark:text-white flex justify-center items-center ">
                   <RiDeleteBin6Fill
                     size={35}
                     onClick={() => removeVote(photo.id)}

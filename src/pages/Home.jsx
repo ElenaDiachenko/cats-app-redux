@@ -53,7 +53,6 @@ const Home = () => {
       }),
     },
   );
-  console.log(images);
 
   const breedOptions = useOptions(breeds, 'all', 'All Breeds');
 

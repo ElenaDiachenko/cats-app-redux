@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
-import { useGetBreedsQuery } from '../redux/breed/breedsApiSlice';
+import { useGetBreedListQuery } from '../redux/cats/catsApiSlice';
 import { requests } from '../servises/API';
 import Carousel from '../components/Carousel';
 import { BackLink } from '../components/BackLink';
 import { LoaderSpinner } from '../components/LoaderSpinner';
 
 const BreedDetails = () => {
-  const { data, error, isLoading, isFetching } = useGetBreedsQuery();
+  const { data, error, isLoading, isFetching } = useGetBreedListQuery();
   const location = useLocation();
   const { id } = useParams();
   const [breeds, setBreeds] = useState([]);

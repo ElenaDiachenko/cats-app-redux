@@ -5,6 +5,12 @@ import { FaCloudUploadAlt } from 'react-icons/fa';
 import { MasonryGallery } from '../components/MasonryGallery';
 import { requests } from '../servises/API';
 import { useOptions, useGetBreeds } from '../hooks';
+import {
+  useGetBreedListQuery,
+  useGetAllFavouriteQuery,
+  useGetAllImagesQuery,
+} from '../redux/cats/catsApiSlice';
+
 import { selectOptions } from '../utilities/options';
 import { Pagination } from '../components/Pagination';
 import { LoaderSpinner } from '../components/LoaderSpinner';
@@ -14,7 +20,8 @@ const Home = () => {
   const [userId] = useState(
     JSON.parse(localStorage.getItem('catsapi_userId')) ?? nanoid(),
   );
-  const { breeds, isLoading, error } = useGetBreeds();
+  // const { breeds, isLoading, error } = useGetBreeds();
+
   const [isLoadingGallery, setIsLoadingGallery] = useState(false);
   const [errorGallery, setErrorGallery] = useState(false);
   const [order, setOrder] = useState('rand');
@@ -23,61 +30,91 @@ const Home = () => {
   const [limit, setLimit] = useState(10);
   const [shownPhotos, setShownPhotos] = useState([]);
   const [page, setPage] = useState(1);
-  const [total, setTotal] = useState(null);
-  const breedOptions = useOptions(breeds, 'all', 'All Breeds');
   const [favouriteBtn] = useState(true);
-  const [favouriteList, setFavouriteList] = useState([]);
+  // const [favouriteList, setFavouriteList] = useState([]);
   const [favourite, setFavourite] = useState(null);
+  const {
+    data: breeds = [],
+    error,
+    isFetching: isFetchingBreeds,
+    isSuccess: isSuccessBreeds,
+  } = useGetBreedListQuery();
+  const { data: allFavourites = [], isSuccess: isSuccessFavourites } =
+    useGetAllFavouriteQuery({
+      userId,
+    });
+
+  ////////////////////////
+  const { images, isSuccessImages, totalCount } = useGetAllImagesQuery(
+    {
+      order,
+      type,
+      breedId: breed,
+      limit,
+      page,
+    },
+    {
+      selectFromResult: ({ data, error, isLoading, isSuccess }) => ({
+        images: data?.response,
+        totalCount: data?.totalCount,
+        error,
+        isLoading,
+        isSuccessImages: isSuccess,
+      }),
+    },
+  );
+
+  const breedOptions = useOptions(breeds, 'all', 'All Breeds');
 
   useEffect(() => {
     localStorage.setItem('catsapi_userId', JSON.stringify(userId));
   }, [userId]);
 
+  const getImageWithFavourite = (images, favourites) => {
+    let result = [];
+    images.forEach((item1) => {
+      favourites.forEach((item) => {
+        if (item.image_id === item1.id) {
+          item1 = { ...item1, favourite: true };
+        }
+      });
+      result.push(item1);
+    });
+
+    return result;
+  };
+
   useEffect(() => {
-    (async () => {
-      try {
-        const res = await requests.getFavourites(userId);
-
-        setFavouriteList(res.data);
-      } catch (error) {
-        console.error(error.message);
-      }
-    })();
-  }, [userId, favourite]);
-
-  /// show images
-
-  useEffect(() => {
-    if (!breeds.length && !favouriteList.length) return;
-    (async () => {
+    if (isSuccessImages && isSuccessFavourites) {
       setIsLoadingGallery(true);
-      setTotal(null);
-      try {
-        const res = await requests.getImages(order, type, breed, limit, page);
-        let compareRes = [];
-        res.data.forEach((item1) => {
-          favouriteList.forEach((item) => {
-            if (item.image_id === item1.id) {
-              item1 = { ...item1, favourite: true };
-            }
-          });
-          compareRes.push(item1);
-        });
+      const result = getImageWithFavourite(images, allFavourites);
+      setShownPhotos(result);
+      setIsLoadingGallery(false);
+    }
+  }, [allFavourites, images, isSuccessFavourites, isSuccessImages]);
 
-        setShownPhotos(compareRes);
-        setTotal(+res.headers['pagination-count']);
-      } catch (error) {
-        setErrorGallery(true);
-        console.log(error.message);
-      } finally {
-        setIsLoadingGallery(false);
-      }
-    })();
-  }, [breed, limit, order, type, page, breeds, favourite, favouriteList]);
+  console.log(images);
+  // useEffect(() => {
+  //   (async () => {
+  //     setTotal(null);
+  //     try {
+  //       const res = await requests.getImages(order, type, breed, limit, page);
+  //       setTotal(+res.headers['pagination-count']);
+  //     } catch (error) {
+  //       console.log(error.message);
+  //     }
+  //   })();
+  // }, [breed, limit, order, page, type]);
+
+  // useEffect(() => {
+  //   if (!isSuccessImages && !isSuccessFavourites) return;
+  // const result = getImageWithFavourite(images, allFavourites);
+  // setShownPhotos(result);
+  // }, [allFavourites, images, isSuccessFavourites, isSuccessImages]);
 
   const toggleFavourite = useCallback(() => {
     (async (id) => {
-      const filter = await favouriteList.find((it) => it.image_id === id);
+      const filter = await allFavourites.find((it) => it.image_id === id);
       if (filter === undefined) {
         (() => {
           try {
@@ -102,7 +139,7 @@ const Home = () => {
         })();
       }
     })();
-  }, [favouriteList, userId]);
+  }, [allFavourites, userId]);
   //////
   useEffect(() => {
     window.scrollTo({
@@ -115,14 +152,14 @@ const Home = () => {
 
   return (
     <>
-      {isLoading && (
+      {isFetchingBreeds && (
         <div className="mt-[100px]">
           <LoaderSpinner />
         </div>
       )}
       {error && <p>Something went wrong</p>}
 
-      {breeds.length > 0 && (
+      {shownPhotos.length > 0 && (
         <>
           {selectOptions && (
             <section className=" flex flex-col  gap-y-3 md:flex-row md:items-center md:justify-between md:gap-x-3 ">
@@ -145,31 +182,24 @@ const Home = () => {
               </NavLink>
             </section>
           )}
-          {isLoadingGallery && (
-            <div className="mt-[100px]">
-              <LoaderSpinner />
-            </div>
-          )}
           {errorGallery && (
             <div className="mt-[100px]">
               <p>Something went wrong</p>
             </div>
           )}
 
-          {shownPhotos.length > 0 &&
-            !isLoadingGallery &&
-            favouriteList.length && (
-              <MasonryGallery
-                photos={shownPhotos}
-                favouriteBtn={favouriteBtn}
-                handleFavourite={toggleFavourite}
-              />
-            )}
+          {shownPhotos.length > 0 && (
+            <MasonryGallery
+              photos={shownPhotos}
+              favouriteBtn={favouriteBtn}
+              handleFavourite={toggleFavourite}
+            />
+          )}
 
-          {total > limit && !isLoadingGallery && (
+          {totalCount > limit && !isLoadingGallery && (
             <Pagination
               limit={limit}
-              total={total}
+              total={totalCount}
               paginate={paginate}
               currentPage={page}
               buttonConst={3}

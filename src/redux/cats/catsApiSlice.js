@@ -28,6 +28,19 @@ export const catApi = createApi({
         };
       },
     }),
+    addFavourite: builder.mutation({
+      query: (body) => ({
+        url: `/favourites`,
+        method: 'POST',
+        body,
+      }),
+    }),
+    removeFavourite: builder.mutation({
+      query: (id) => ({
+        url: `/favourites/${id}`,
+        method: 'DELETE',
+      }),
+    }),
 
     getAllFavourite: builder.query({
       query: ({ userId, limit, page }) =>
@@ -39,5 +52,7 @@ export const catApi = createApi({
 export const {
   useGetBreedListQuery,
   useGetAllFavouriteQuery,
+  useRemoveFavouriteMutation,
+  useAddFavouriteMutation,
   useGetAllImagesQuery,
 } = catApi;

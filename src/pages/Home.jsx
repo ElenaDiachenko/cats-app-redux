@@ -9,6 +9,8 @@ import {
   useGetBreedListQuery,
   useGetAllFavouriteQuery,
   useGetAllImagesQuery,
+  useRemoveFavouriteMutation,
+  useAddFavouriteMutation,
 } from '../redux/cats/catsApiSlice';
 
 import { selectOptions } from '../utilities/options';
@@ -39,12 +41,12 @@ const Home = () => {
     isFetching: isFetchingBreeds,
     isSuccess: isSuccessBreeds,
   } = useGetBreedListQuery();
+
   const { data: allFavourites = [], isSuccess: isSuccessFavourites } =
     useGetAllFavouriteQuery({
       userId,
     });
 
-  ////////////////////////
   const { images, isSuccessImages, totalCount } = useGetAllImagesQuery(
     {
       order,
@@ -84,6 +86,9 @@ const Home = () => {
     return result;
   };
 
+  const [addFavourite] = useAddFavouriteMutation();
+  const [removeFavourite] = useRemoveFavouriteMutation();
+
   useEffect(() => {
     if (isSuccessImages && isSuccessFavourites) {
       setIsLoadingGallery(true);
@@ -93,53 +98,61 @@ const Home = () => {
     }
   }, [allFavourites, images, isSuccessFavourites, isSuccessImages]);
 
-  console.log(images);
-  // useEffect(() => {
-  //   (async () => {
-  //     setTotal(null);
-  //     try {
-  //       const res = await requests.getImages(order, type, breed, limit, page);
-  //       setTotal(+res.headers['pagination-count']);
-  //     } catch (error) {
-  //       console.log(error.message);
+  const toggleFavourite = async (id) => {
+    const filter = await allFavourites.find((it) => it.image_id === id);
+    if (filter === undefined) {
+      (() => {
+        try {
+          const favourite = {
+            image_id: id,
+            sub_id: userId,
+          };
+          addFavourite(favourite);
+          setFavourite(nanoid());
+        } catch (error) {
+          console.log(error);
+        }
+      })();
+    } else {
+      (() => {
+        try {
+          removeFavourite(filter.id);
+          setFavourite(nanoid());
+        } catch (error) {
+          console.log(error);
+        }
+      })();
+    }
+  };
+
+  // const toggleFavourite = useCallback(() => {
+  //   (async (id) => {
+  //     const filter = await allFavourites.find((it) => it.image_id === id);
+  //     if (filter === undefined) {
+  //       (() => {
+  //         try {
+  //           const favourite = {
+  //             image_id: id,
+  //             sub_id: userId,
+  //           };
+  //           requests.addFavourite(favourite);
+  //           setFavourite(nanoid());
+  //         } catch (error) {
+  //           console.log(error);
+  //         }
+  //       })();
+  //     } else {
+  //       (() => {
+  //         try {
+  //           requests.removeFavourite(filter.id);
+  //           setFavourite(nanoid());
+  //         } catch (error) {
+  //           console.log(error);
+  //         }
+  //       })();
   //     }
   //   })();
-  // }, [breed, limit, order, page, type]);
-
-  // useEffect(() => {
-  //   if (!isSuccessImages && !isSuccessFavourites) return;
-  // const result = getImageWithFavourite(images, allFavourites);
-  // setShownPhotos(result);
-  // }, [allFavourites, images, isSuccessFavourites, isSuccessImages]);
-
-  const toggleFavourite = useCallback(() => {
-    (async (id) => {
-      const filter = await allFavourites.find((it) => it.image_id === id);
-      if (filter === undefined) {
-        (() => {
-          try {
-            const favourite = {
-              image_id: id,
-              sub_id: userId,
-            };
-            requests.addFavourite(favourite);
-            setFavourite(nanoid());
-          } catch (error) {
-            console.log(error);
-          }
-        })();
-      } else {
-        (() => {
-          try {
-            requests.removeFavourite(filter.id);
-            setFavourite(nanoid());
-          } catch (error) {
-            console.log(error);
-          }
-        })();
-      }
-    })();
-  }, [allFavourites, userId]);
+  // }, [allFavourites, userId]);
   //////
   useEffect(() => {
     window.scrollTo({

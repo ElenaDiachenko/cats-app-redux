@@ -2,18 +2,18 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { themeReducer } from './theme/themeSlice';
-// import { breedsReducer } from './breed/breedsSlice';
-import { catApi } from './cats/catsApiSlice';
+import { apiSlice } from './apiSlice';
+// import { catApi } from './cats/catsApiSlice';
 
 export const store = configureStore({
   reducer: {
     darkTheme: themeReducer,
     // breeds: breedsReducer,
-    [catApi.reducerPath]: catApi.reducer,
+    [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) => [
     ...getDefaultMiddleware(),
-    catApi.middleware,
+    apiSlice.middleware,
   ],
 });
 setupListeners(store.dispatch);

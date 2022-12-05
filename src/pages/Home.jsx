@@ -4,12 +4,13 @@ import { NavLink } from 'react-router-dom';
 import { FaCloudUploadAlt } from 'react-icons/fa';
 import { MasonryGallery } from '../components/MasonryGallery';
 import { useOptions } from '../hooks';
+
 import {
   useGetBreedListQuery,
   useGetAllImagesQuery,
   useRemoveFavouriteMutation,
   useAddFavouriteMutation,
-} from '../redux/cats/catsApiSlice';
+} from '../redux/cats';
 
 import { selectOptions } from '../utilities/options';
 import { Pagination } from '../components/Pagination';
@@ -21,7 +22,7 @@ const Home = () => {
     JSON.parse(localStorage.getItem('catsapi_userId')) ?? nanoid(),
   );
 
-  const [order, setOrder] = useState('rand');
+  const [order, setOrder] = useState('desc');
   const [type, setType] = useState('gif,jpg,png');
   const [breed, setBreed] = useState('');
   const [limit, setLimit] = useState(10);

@@ -18,13 +18,21 @@ const Voting = () => {
   const { data: votes, isSuccess: isSuccessVotes } = useGetVotesQuery(userId, {
     skip: !userId,
   });
-  const { data: favourites, isSuccess: isSuccessFavourites } =
-    useGetAllFavouriteQuery(
-      { userId, limit: 10, page: 1 },
-      {
-        skip: !userId,
-      },
-    );
+  const { favourites, isSuccessFavourites } = useGetAllFavouriteQuery(
+    {
+      userId,
+      limit: 10,
+      page: 1,
+    },
+    {
+      skip: !userId,
+      selectFromResult: ({ data, isSuccess }) => ({
+        favourites: data?.response,
+        isSuccessFavourites: isSuccess,
+      }),
+    },
+  );
+
   const [addFavourite] = useAddFavouriteMutation();
   const [addVote] = useAddVoteMutation();
 

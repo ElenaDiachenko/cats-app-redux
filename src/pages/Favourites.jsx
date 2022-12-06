@@ -1,36 +1,35 @@
 import { useState, useEffect } from 'react';
 import { MasonryGallery } from '../components/MasonryGallery';
-import { requests } from '../servises/API';
 import { Pagination } from '../components/Pagination';
 import { LoaderSpinner } from '../components/LoaderSpinner';
+import {
+  useGetAllFavouriteQuery,
+  useRemoveFavouriteMutation,
+} from '../redux/cats';
+import { NotFound } from '../components/NotFound';
 
 const Favourites = () => {
   const [userId] = useState(JSON.parse(localStorage.getItem('catsapi_userId')));
-  const [favourites, setFavourites] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [selectedFavourite, setSelectedFavourite] = useState('');
-  // const [favouriteBtn] = useState(true);
   const [limit] = useState(10);
-  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        setIsLoading(true);
-        const res = await requests.getFavourites(userId, limit, page - 1);
-
-        setFavourites(res.data);
-        setTotal(+res.headers['pagination-count']);
-      } catch (error) {
-        console.error(error.message);
-        setError(true);
-      } finally {
-        setIsLoading(false);
-      }
-    })();
-  }, [userId, selectedFavourite, page, limit]);
+  const { favourites, isSuccess, isLoading, isError, totalCount } =
+    useGetAllFavouriteQuery(
+      {
+        userId,
+        limit,
+        page: page - 1,
+      },
+      {
+        selectFromResult: ({ data, isError, isLoading, isSuccess }) => ({
+          favourites: data?.response,
+          totalCount: data?.totalCount,
+          isError,
+          isLoading,
+          isSuccess,
+        }),
+      },
+    );
+  const [removeFavourite] = useRemoveFavouriteMutation();
 
   useEffect(() => {
     window.scrollTo({
@@ -38,15 +37,6 @@ const Favourites = () => {
       top: '0px',
     });
   }, [page]);
-
-  const removeFavourite = async (id) => {
-    try {
-      await requests.removeFavourite(id);
-      setSelectedFavourite(id);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const paginate = (pageNumber) => setPage(pageNumber);
   return (
@@ -56,25 +46,27 @@ const Favourites = () => {
           <LoaderSpinner />
         </div>
       )}
-      {error && <p>Something went wrong</p>}
-      {!isLoading ? (
-        <MasonryGallery
-          photos={favourites}
-          // favouriteBtn={favouriteBtn}
-          removeVote={removeFavourite}
-        />
-      ) : null}
+      {isError && <p>Something went wrong</p>}
 
-      {total > limit && (
-        <Pagination
-          limit={limit}
-          total={total}
-          paginate={paginate}
-          currentPage={page}
-          buttonConst={3}
-          contentPerPage={5}
-          siblingCount={1}
-        />
+      {isSuccess && (
+        <>
+          {favourites.length ? (
+            <MasonryGallery photos={favourites} removeVote={removeFavourite} />
+          ) : (
+            <NotFound title={'Favourites'} />
+          )}
+          {totalCount > limit && (
+            <Pagination
+              limit={limit}
+              total={totalCount}
+              paginate={paginate}
+              currentPage={page}
+              buttonConst={3}
+              contentPerPage={5}
+              siblingCount={1}
+            />
+          )}
+        </>
       )}
     </div>
   );

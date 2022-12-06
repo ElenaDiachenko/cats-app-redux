@@ -20,6 +20,7 @@ const BreedDetails = () => {
   const {
     data: breeds,
     isLoading: isLoadingBreeds,
+    isSuccess: isSuccessBreeds,
     isError: isErrorBreeds,
   } = useGetBreedByIdQuery(id, { skip: !id });
 
@@ -39,7 +40,7 @@ const BreedDetails = () => {
         </div>
       )}
 
-      {breedDescr && (
+      {breedDescr && isSuccessBreeds && (
         <div className="flex flex-col gap-y-4">
           <BackLink to={location.state?.from ?? '/breeds'}>Go Back</BackLink>
 

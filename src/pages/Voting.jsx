@@ -3,12 +3,30 @@ import { requests } from '../servises/API';
 import { BsEmojiSmile } from 'react-icons/bs';
 import { ImSad } from 'react-icons/im';
 import { FaRegHeart } from 'react-icons/fa';
+import {
+  useGetVotesQuery,
+  useGetAllFavouriteQuery,
+  useAddVoteMutation,
+  useAddFavouriteMutation,
+} from '../redux/cats';
 
 const Voting = () => {
   const [currentImage, setCurrentImage] = useState({});
   const [userId] = useState(JSON.parse(localStorage.getItem('catsapi_userId')));
   const [clicked, setClicked] = useState(false);
   const [userActions, setUserActions] = useState([]);
+  const { data: votes, isSuccess: isSuccessVotes } = useGetVotesQuery(userId, {
+    skip: !userId,
+  });
+  const { data: favourites, isSuccess: isSuccessFavourites } =
+    useGetAllFavouriteQuery(
+      { userId, limit: 10, page: 1 },
+      {
+        skip: !userId,
+      },
+    );
+  const [addFavourite] = useAddFavouriteMutation();
+  const [addVote] = useAddVoteMutation();
 
   useEffect(() => {
     (async () => {
@@ -23,50 +41,36 @@ const Voting = () => {
   }, [clicked, userId]);
 
   useEffect(() => {
-    (async () => {
-      try {
-        const favouriteList = await requests.getFavourites(userId);
-        const votesList = await requests.getVoteList(userId);
-        const result = [...favouriteList.data, ...votesList];
+    if (isSuccessVotes && isSuccessFavourites) {
+      const result = [...favourites, ...votes];
 
-        const sortedResult = [...result].sort(
-          (a, b) =>
-            Number(new Date(b.created_at).getTime()) -
-            Number(new Date(a.created_at).getTime()),
-        );
+      const sortedResult = [...result].sort(
+        (a, b) =>
+          Number(new Date(b.created_at).getTime()) -
+          Number(new Date(a.created_at).getTime()),
+      );
 
-        setUserActions(sortedResult.slice(0, 10));
-      } catch (error) {
-        console.error(error.message);
-      }
-    })();
-  }, [userId, currentImage]);
-
-  const handleVote = async (id, value) => {
-    try {
-      const currentVote = {
-        image_id: id,
-        sub_id: userId,
-        value: value,
-      };
-      await requests.addVote(currentVote);
-      setClicked(true);
-    } catch (error) {
-      console.log(error);
+      setUserActions(sortedResult.slice(0, 10));
     }
+  }, [favourites, isSuccessFavourites, isSuccessVotes, votes]);
+
+  const handleVote = (id, value) => {
+    const currentVote = {
+      image_id: id,
+      sub_id: userId,
+      value: value,
+    };
+    addVote(currentVote);
+    setClicked(true);
   };
 
-  const handleFavourite = async (id) => {
-    try {
-      const favourite = {
-        image_id: id,
-        sub_id: userId,
-      };
-      await requests.addFavourite(favourite);
-      setClicked(true);
-    } catch (error) {
-      console.log(error);
-    }
+  const handleFavourite = (id) => {
+    const favourite = {
+      image_id: id,
+      sub_id: userId,
+    };
+    addFavourite(favourite);
+    setClicked(true);
   };
 
   return (
@@ -136,33 +140,6 @@ const Voting = () => {
               )}
             </div>
           ))}
-        {/* {votesList.length > 0 &&
-          votesList.map((it) => (
-            <div
-              key={it.id}
-              className="flex  justify-between items-center p-3 rounded  bg-gray-400 dark:bg-slate-600"
-            >
-              <div className="flex gap-x-3">
-                <p className="font-bold">
-                  {new Date(it.created_at).toJSON().slice(11, 16)}
-                </p>
-                <p>
-                  Image ID: <b> {it.image_id}</b> was added to{' '}
-                  <b>{it.value === 1 ? 'Likes' : 'Dislikes'}</b>
-                </p>
-              </div>
-
-              {it.value === 1 ? (
-                <div className="w-[40px] h-[40px] rounded bg-green-400 flex justify-center items-center">
-                  <CiFaceSmile size={35} />
-                </div>
-              ) : (
-                <div className="w-[40px] h-[40px] rounded bg-yellow-400 flex justify-center items-center">
-                  <CgSmileSad size={35} />
-                </div>
-              )}
-            </div>
-          ))} */}
       </div>
     </div>
   );

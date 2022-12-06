@@ -25,7 +25,7 @@ export const NavLikes = () => {
             ? activeClassName
             : 'w-[40px] h-[40px] rounded  flex justify-center items-center  hover:opacity-50 cursor-pointer'
         }
-        to="/favourites"
+        to="/favorites"
       >
         <FaRegHeart size={30} />
       </NavLink>

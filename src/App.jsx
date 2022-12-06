@@ -7,7 +7,7 @@ const Voting = lazy(() => import('./pages/Voting'));
 const Breeds = lazy(() => import('./pages/Breeds'));
 const Upload = lazy(() => import('./pages/Upload'));
 const Likes = lazy(() => import('./pages/Likes'));
-const Favourites = lazy(() => import('./pages/Favourites'));
+const Favorites = lazy(() => import('./pages/Favorites'));
 const Dislikes = lazy(() => import('./pages/Dislikes'));
 const BreedDetails = lazy(() => import('./pages/BreedDetails'));
 
@@ -24,7 +24,7 @@ function App() {
           <Route path="/breeds/:id" element={<BreedDetails />} />
           <Route path="/upload" element={<Upload />} />
           <Route path="/likes" element={<Likes />} />
-          <Route path="/favourites" element={<Favourites />} />
+          <Route path="/favorites" element={<Favorites />} />
           <Route path="/dislikes" element={<Dislikes />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />

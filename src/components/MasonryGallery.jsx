@@ -6,8 +6,8 @@ import { RiDeleteBin6Fill } from 'react-icons/ri';
 export const MasonryGallery = ({
   photos,
   link,
-  favouriteBtn,
-  handleFavourite,
+  favoriteBtn,
+  handleFavorite,
   removeVote,
 }) => {
   return (
@@ -36,21 +36,21 @@ export const MasonryGallery = ({
                 </div>
               </Link>
             ))
-          : favouriteBtn
+          : favoriteBtn
           ? photos.map((photo) => (
               <div className="relative" key={photo.id}>
                 <img className="rounded w-full block" src={photo?.url} alt="" />
                 <div className="absolute top-0 left-0 w-full h-full hover:bg-black/60 opacity-0 hover:opacity-100 text-white">
                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    {photo.favourite ? (
+                    {photo.favorite ? (
                       <FaHeart
-                        onClick={() => handleFavourite(photo)}
+                        onClick={() => handleFavorite(photo)}
                         className="fill-red-400 cursor-pointer"
                         size={35}
                       />
                     ) : (
                       <FaRegHeart
-                        onClick={() => handleFavourite(photo)}
+                        onClick={() => handleFavorite(photo)}
                         className="fill-red-400 cursor-pointer"
                         size={35}
                       />

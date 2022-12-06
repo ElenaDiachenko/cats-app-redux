@@ -5,9 +5,9 @@ import { ImSad } from 'react-icons/im';
 import { FaRegHeart } from 'react-icons/fa';
 import {
   useGetVotesQuery,
-  useGetAllFavouriteQuery,
+  useGetAllFavoriteQuery,
   useAddVoteMutation,
-  useAddFavouriteMutation,
+  useAddFavoriteMutation,
 } from '../redux/cats';
 
 const Voting = () => {
@@ -18,7 +18,7 @@ const Voting = () => {
   const { data: votes, isSuccess: isSuccessVotes } = useGetVotesQuery(userId, {
     skip: !userId,
   });
-  const { favourites, isSuccessFavourites } = useGetAllFavouriteQuery(
+  const { favorites, isSuccessFavorites } = useGetAllFavoriteQuery(
     {
       userId,
       limit: 10,
@@ -27,13 +27,13 @@ const Voting = () => {
     {
       skip: !userId,
       selectFromResult: ({ data, isSuccess }) => ({
-        favourites: data?.response,
-        isSuccessFavourites: isSuccess,
+        favorites: data?.response,
+        isSuccessFavorites: isSuccess,
       }),
     },
   );
 
-  const [addFavourite] = useAddFavouriteMutation();
+  const [addFavorite] = useAddFavoriteMutation();
   const [addVote] = useAddVoteMutation();
 
   useEffect(() => {
@@ -49,8 +49,8 @@ const Voting = () => {
   }, [clicked, userId]);
 
   useEffect(() => {
-    if (isSuccessVotes && isSuccessFavourites) {
-      const result = [...favourites, ...votes];
+    if (isSuccessVotes && isSuccessFavorites) {
+      const result = [...favorites, ...votes];
 
       const sortedResult = [...result].sort(
         (a, b) =>
@@ -60,7 +60,7 @@ const Voting = () => {
 
       setUserActions(sortedResult.slice(0, 10));
     }
-  }, [favourites, isSuccessFavourites, isSuccessVotes, votes]);
+  }, [favorites, isSuccessFavorites, isSuccessVotes, votes]);
 
   const handleVote = (id, value) => {
     const currentVote = {
@@ -72,12 +72,12 @@ const Voting = () => {
     setClicked(true);
   };
 
-  const handleFavourite = (id) => {
-    const favourite = {
+  const handleFavorite = (id) => {
+    const favorite = {
       image_id: id,
       sub_id: userId,
     };
-    addFavourite(favourite);
+    addFavorite(favorite);
     setClicked(true);
   };
 
@@ -98,7 +98,7 @@ const Voting = () => {
               <BsEmojiSmile size={35} />
             </button>
             <button
-              onClick={() => handleFavourite(currentImage?.id)}
+              onClick={() => handleFavorite(currentImage?.id)}
               className="w-[40px] h-[40px] rounded bg-red-400 flex justify-center items-center"
             >
               <FaRegHeart size={35} />
@@ -128,7 +128,7 @@ const Voting = () => {
                       ? 'Likes'
                       : it.value === -1
                       ? 'Dislikes'
-                      : 'Favourite'}
+                      : 'Favorite'}
                   </b>
                 </p>
               </div>

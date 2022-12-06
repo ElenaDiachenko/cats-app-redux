@@ -11,7 +11,7 @@ export const imagesApiSlice = apiSlice.injectEndpoints({
           totalCount: Number(meta.response.headers.get('pagination-count')),
         };
       },
-      providesTags: [{ type: 'Favourites', id: 'LiST' }],
+      providesTags: [{ type: 'Favorites', id: 'LiST' }],
     }),
   }),
 });

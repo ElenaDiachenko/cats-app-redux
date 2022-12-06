@@ -3,17 +3,17 @@ import { MasonryGallery } from '../components/MasonryGallery';
 import { Pagination } from '../components/Pagination';
 import { LoaderSpinner } from '../components/LoaderSpinner';
 import {
-  useGetAllFavouriteQuery,
-  useRemoveFavouriteMutation,
+  useGetAllFavoriteQuery,
+  useRemoveFavoriteMutation,
 } from '../redux/cats';
 import { NotFound } from '../components/NotFound';
 
-const Favourites = () => {
+const Favorites = () => {
   const [userId] = useState(JSON.parse(localStorage.getItem('catsapi_userId')));
   const [limit] = useState(10);
   const [page, setPage] = useState(1);
-  const { favourites, isSuccess, isLoading, isError, totalCount } =
-    useGetAllFavouriteQuery(
+  const { favorites, isSuccess, isLoading, isError, totalCount } =
+    useGetAllFavoriteQuery(
       {
         userId,
         limit,
@@ -21,7 +21,7 @@ const Favourites = () => {
       },
       {
         selectFromResult: ({ data, isError, isLoading, isSuccess }) => ({
-          favourites: data?.response,
+          favorites: data?.response,
           totalCount: data?.totalCount,
           isError,
           isLoading,
@@ -29,7 +29,7 @@ const Favourites = () => {
         }),
       },
     );
-  const [removeFavourite] = useRemoveFavouriteMutation();
+  const [removeFavorite] = useRemoveFavoriteMutation();
 
   useEffect(() => {
     window.scrollTo({
@@ -50,10 +50,10 @@ const Favourites = () => {
 
       {isSuccess && (
         <>
-          {favourites.length ? (
-            <MasonryGallery photos={favourites} removeVote={removeFavourite} />
+          {favorites.length ? (
+            <MasonryGallery photos={favorites} removeVote={removeFavorite} />
           ) : (
-            <NotFound title={'Favourites'} />
+            <NotFound title={'Favorites'} />
           )}
           {totalCount > limit && (
             <Pagination
@@ -72,4 +72,4 @@ const Favourites = () => {
   );
 };
 
-export default Favourites;
+export default Favorites;

@@ -8,8 +8,8 @@ import { useOptions } from '../hooks';
 import {
   useGetBreedListQuery,
   useGetAllImagesQuery,
-  useRemoveFavouriteMutation,
-  useAddFavouriteMutation,
+  useRemoveFavoriteMutation,
+  useAddFavoriteMutation,
 } from '../redux/cats';
 
 import { selectOptions } from '../utilities/options';
@@ -26,7 +26,7 @@ const Home = () => {
   const [breed, setBreed] = useState('');
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
-  const [favouriteBtn] = useState(true);
+  const [favoriteBtn] = useState(true);
   const {
     data: breeds = [],
     error,
@@ -60,21 +60,21 @@ const Home = () => {
     localStorage.setItem('catsapi_userId', JSON.stringify(userId));
   }, [userId]);
 
-  const [addFavourite] = useAddFavouriteMutation();
-  const [removeFavourite] = useRemoveFavouriteMutation();
+  const [addFavorite] = useAddFavoriteMutation();
+  const [removeFavorite] = useRemoveFavoriteMutation();
 
-  const toggleFavourite = async (photo) => {
-    if (photo.favourite === undefined) {
+  const toggleFavorite = async (photo) => {
+    if (photo.favorite === undefined) {
       console.log(photo.id);
-      const favourite = {
+      const favorite = {
         image_id: photo.id,
         sub_id: userId,
       };
-      addFavourite(favourite);
+      addFavorite(favorite);
     } else {
-      console.log(photo?.favourite.id);
+      console.log(photo?.favorite.id);
 
-      removeFavourite(photo?.favourite.id);
+      removeFavorite(photo?.favorite.id);
     }
   };
 
@@ -122,8 +122,8 @@ const Home = () => {
           {isSuccessImages && (
             <MasonryGallery
               photos={images}
-              favouriteBtn={favouriteBtn}
-              handleFavourite={toggleFavourite}
+              favoriteBtn={favoriteBtn}
+              handleFavorite={toggleFavorite}
             />
           )}
 

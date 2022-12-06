@@ -35,19 +35,19 @@ const removeVote = async (id) => {
   return res.data;
 };
 
-const addFavourite = async (favourite) => {
-  const res = await axios.post('/favourites', favourite);
+const addFavorite = async (favorite) => {
+  const res = await axios.post('/favorites', favorite);
   return res.data;
 };
 
-const removeFavourite = async (favouriteId) => {
-  const res = await axios.delete(`/favourites/${favouriteId}`);
+const removeFavorite = async (favoriteId) => {
+  const res = await axios.delete(`/favorites/${favoriteId}`);
   return res;
 };
 
-const getFavourites = async (userId, limit, page) => {
+const getFavorites = async (userId, limit, page) => {
   const res = await axios.get(
-    `/favourites?sub_id=${userId}&limit=${limit}&page=${page}`,
+    `/favorites?sub_id=${userId}&limit=${limit}&page=${page}`,
   );
   return res;
 };
@@ -91,10 +91,10 @@ export const requests = {
   getImageToVote,
   addVote,
   removeVote,
-  addFavourite,
+  addFavorite,
   getVoteList,
-  getFavourites,
-  removeFavourite,
+  getFavorites,
+  removeFavorite,
   getBreeds,
   getBreedById,
   getBreedDetails,

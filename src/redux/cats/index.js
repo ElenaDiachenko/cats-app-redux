@@ -1,10 +1,10 @@
 import { useGetBreedListQuery, useGetBreedByIdQuery } from './breedsApiSlice';
 import { useGetAllImagesQuery } from './imagesApiSlice';
 import {
-  useGetAllFavouriteQuery,
-  useRemoveFavouriteMutation,
-  useAddFavouriteMutation,
-} from './favouritesApiSlice';
+  useGetAllFavoriteQuery,
+  useRemoveFavoriteMutation,
+  useAddFavoriteMutation,
+} from './favoritesApiSlice';
 import {
   useGetVotesQuery,
   useGetDislikesQuery,
@@ -17,11 +17,11 @@ export {
   useGetBreedListQuery,
   useGetBreedByIdQuery,
   useGetAllImagesQuery,
-  useGetAllFavouriteQuery,
-  useRemoveFavouriteMutation,
-  useAddFavouriteMutation,
-   useGetVotesQuery,
-   useGetDislikesQuery,
+  useGetAllFavoriteQuery,
+  useRemoveFavoriteMutation,
+  useAddFavoriteMutation,
+  useGetVotesQuery,
+  useGetDislikesQuery,
   useGetLikesQuery,
   useRemoveVoteMutation,
   useAddVoteMutation,

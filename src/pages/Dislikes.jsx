@@ -5,7 +5,6 @@ import { LoaderSpinner } from '../components/LoaderSpinner';
 import { useGetDislikesQuery, useRemoveVoteMutation } from '../redux/cats';
 import { NotFound } from '../components/NotFound';
 
-
 const Dislikes = () => {
   const [userId] = useState(JSON.parse(localStorage.getItem('catsapi_userId')));
   const [limit] = useState(10);
@@ -50,7 +49,7 @@ const Dislikes = () => {
         (currentPhotos.length ? (
           <MasonryGallery photos={currentPhotos} removeVote={removeVote} />
         ) : (
-          <NotFound title={'Dislike'} />
+          <NotFound title={'Dislikes'} />
         ))}
       {total > limit && (
         <Pagination

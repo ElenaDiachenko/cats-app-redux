@@ -1,45 +1,33 @@
 import { useState, useEffect } from 'react';
 import { MasonryGallery } from '../components/MasonryGallery';
-import { requests } from '../servises/API';
 import { Pagination } from '../components/Pagination';
 import { LoaderSpinner } from '../components/LoaderSpinner';
+import { useGetLikesQuery, useRemoveVoteMutation } from '../redux/cats';
+import { NotFound } from '../components/NotFound';
 
 const Likes = () => {
   const [userId] = useState(JSON.parse(localStorage.getItem('catsapi_userId')));
-  const [likes, setLikes] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [selectedVote, setSelectedVote] = useState('');
   const [limit] = useState(10);
   const [total, setTotal] = useState(null);
   const [page, setPage] = useState(1);
   const [currentPhotos, setCurrentPhotos] = useState([]);
+  const {
+    data: likes,
+    isLoading: isLoadingLikes,
+    isError: isErrorLikes,
+    isSuccess: isSuccessLikes,
+  } = useGetLikesQuery(userId, {
+    skip: !userId,
+  });
+  const [removeVote] = useRemoveVoteMutation();
 
   useEffect(() => {
-    (async () => {
-      try {
-        setIsLoading(true);
-        const votesList = await requests.getVoteList(userId, 100);
-
-        const filteredResult = votesList.filter((item) => item.value === 1);
-        setLikes(filteredResult);
-        setTotal(filteredResult.length);
-        setPage(1);
-      } catch (error) {
-        console.error(error.message);
-        setError(true);
-      } finally {
-        setIsLoading(false);
-      }
-    })();
-  }, [userId, selectedVote]);
-
-  useEffect(() => {
-    if (!likes.length) return;
+    if (!isSuccessLikes) return;
     const indexOfLastItem = page * limit;
     const indexOfFirstItem = indexOfLastItem - limit;
     setCurrentPhotos(likes.slice(indexOfFirstItem, indexOfLastItem));
-  }, [likes, limit, page]);
+    setTotal(likes.length);
+  }, [likes, isSuccessLikes, limit, page]);
 
   useEffect(() => {
     window.scrollTo({
@@ -48,28 +36,21 @@ const Likes = () => {
     });
   }, [page]);
 
-  const removeVote = async (id) => {
-    try {
-      await requests.removeVote(id);
-      setSelectedVote(id);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const paginate = (pageNumber) => setPage(pageNumber);
   return (
     <div>
-      {isLoading && (
+      {isLoadingLikes && (
         <div className="mt-[100px]">
           <LoaderSpinner />
         </div>
       )}
-      {error && <p>Something went wrong</p>}
-      {!isLoading ? (
-        <MasonryGallery photos={currentPhotos} removeVote={removeVote} />
-      ) : null}
-
+      {isErrorLikes && <p>Something went wrong</p>}
+      {!isLoadingLikes &&
+        (currentPhotos.length ? (
+          <MasonryGallery photos={currentPhotos} removeVote={removeVote} />
+        ) : (
+          <NotFound title={'Likes'} />
+        ))}
       {total > limit && (
         <Pagination
           limit={limit}

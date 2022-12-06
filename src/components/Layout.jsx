@@ -14,7 +14,7 @@ const Layout = () => {
 
   return (
     <div className="bg-zinc-200 dark:bg-gray-800 dark:text-white min-h-screen  ">
-      <div className="max-w-[1400px] mx-auto px-4 lg:px-12">
+      <div className="max-w-[1400px] mx-auto px-4 lg:px-12 flex flex-col">
         <header className="mb-4">
           <nav
             className="border-b border-gray-200 border-opacity-25 py-2.5 flex

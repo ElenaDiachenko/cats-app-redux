@@ -10,12 +10,15 @@ const links = [
 ];
 
 export const NavMenu = () => {
-  const activeClassName = 'underline';
+  const activeClassName =
+    ' rounded  border border-gray-800  p-1 md:px-2.5 md:py-1 dark:border-gray-500 hover:opacity-50 cursor-pointer ';
   return (
     <>
       {links.map((link) => (
         <NavLink
-          className={({ isActive }) => (isActive ? activeClassName : undefined)}
+          className={({ isActive }) =>
+            isActive ? activeClassName : ' hover:opacity-50 cursor-pointer'
+          }
           key={link.path}
           to={link.path}
         >

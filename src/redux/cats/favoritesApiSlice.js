@@ -4,7 +4,7 @@ export const favoritesApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAllFavorite: builder.query({
       query: ({ userId, limit, page }) =>
-        `/favorites?sub_id=${userId}&limit=${limit}&page=${page}`,
+        `/favourites?sub_id=${userId}&limit=${limit}&page=${page}`,
       transformResponse(response, meta) {
         return {
           response,
@@ -15,7 +15,7 @@ export const favoritesApiSlice = apiSlice.injectEndpoints({
     }),
     addFavorite: builder.mutation({
       query: (body) => ({
-        url: `/favorites`,
+        url: `/favourites`,
         method: 'POST',
         body,
       }),
@@ -23,7 +23,7 @@ export const favoritesApiSlice = apiSlice.injectEndpoints({
     }),
     removeFavorite: builder.mutation({
       query: (id) => ({
-        url: `/favorites/${id}`,
+        url: `/favourites/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: [{ type: 'Favorites', id: 'LiST' }],

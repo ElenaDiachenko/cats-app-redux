@@ -17,7 +17,7 @@ const Layout = () => {
       <div className="max-w-[1400px] mx-auto px-4 lg:px-12 flex flex-col">
         <header className="mb-4">
           <nav
-            className="border-b border-gray-200 border-opacity-25 py-2.5 flex
+            className="border-b border-gray-800 dark:border-gray-200 border-opacity-25 py-2.5 flex
           justify-between
         "
           >

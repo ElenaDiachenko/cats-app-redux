@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import Select from 'react-select';
-import { Searchbar } from '../components/Searchbar';
 import { Pagination } from '../components/Pagination';
 import { selectOptions } from '../utilities/options';
 import { useOptions } from '../hooks';
@@ -45,10 +44,6 @@ const Breeds = () => {
     setCurrentPhotos(shownPhotos.slice(indexOfFirstItem, indexOfLastItem));
   }, [currentPage, limit, shownPhotos]);
 
-  const getInputQuery = (searchQuery) => {
-    setQuery(searchQuery);
-  };
-
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -67,7 +62,6 @@ const Breeds = () => {
       {isSuccess && (
         <>
           <section className=" flex flex-col gap-y-3 md:flex-row md:items-center w-full gap-x-4">
-            <Searchbar className="" getQuery={getInputQuery} />
             {breedOptions.length > 0 && (
               <Select
                 options={breedOptions}
@@ -95,7 +89,7 @@ const Breeds = () => {
             <MasonryGallery photos={currentPhotos} link={link} />
           )}
 
-          {total > limit && currentPhotos > 1 && (
+          {total > limit && currentPhotos.length > 1 && (
             <Pagination
               limit={limit}
               total={total}

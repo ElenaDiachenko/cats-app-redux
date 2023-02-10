@@ -42,9 +42,11 @@ const Layout = () => {
             </div>
           </nav>
         </header>
-        <Suspense fallback={<LoaderSpinner />}>
-          <Outlet />
-        </Suspense>
+        <div className="min-h-[100%] flex flex-col">
+          <Suspense fallback={<LoaderSpinner />}>
+            <Outlet />
+          </Suspense>
+        </div>
       </div>
     </div>
   );

@@ -17,7 +17,7 @@ export const MasonryGallery = ({
     >
       <Masonry gutter="20px">
         {link
-          ? photos.map((photo) => (
+          ? photos.map(photo => (
               <Link
                 to={`/breeds/${photo.id}`}
                 key={photo.reference_image_id ?? photo.id}
@@ -37,12 +37,12 @@ export const MasonryGallery = ({
               </Link>
             ))
           : favoriteBtn
-          ? photos.map((photo) => (
+          ? photos.map(photo => (
               <div className="relative" key={photo.id}>
                 <img className="rounded w-full block" src={photo?.url} alt="" />
                 <div className="absolute top-0 left-0 w-full h-full hover:bg-black/60 opacity-0 hover:opacity-100 text-white">
                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    {photo.favorite ? (
+                    {photo?.favourite ? (
                       <FaHeart
                         onClick={() => handleFavorite(photo)}
                         className="fill-red-400 cursor-pointer"
@@ -59,7 +59,7 @@ export const MasonryGallery = ({
                 </div>
               </div>
             ))
-          : photos.map((photo) => (
+          : photos.map(photo => (
               <div className="relative" key={photo.id}>
                 <img
                   className="rounded w-full block"

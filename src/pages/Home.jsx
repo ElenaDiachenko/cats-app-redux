@@ -19,7 +19,7 @@ import { SelectedSection } from '../components/SelectedSection';
 
 const Home = () => {
   const [userId] = useState(
-    JSON.parse(localStorage.getItem('catsapi_userId')) ?? nanoid(),
+    JSON.parse(localStorage.getItem('catsapi_userId')) ?? nanoid()
   );
   const [order, setOrder] = useState('desc');
   const [type, setType] = useState('gif,jpg,png');
@@ -34,25 +34,26 @@ const Home = () => {
     isSuccess: isSuccessBreeds,
   } = useGetBreedListQuery();
 
-  const { images, isSuccessImages, totalCount } = useGetAllImagesQuery(
-    {
-      order,
-      type,
-      breedId: breed,
-      limit,
-      page,
-      userId,
-    },
-    {
-      selectFromResult: ({ data, error, isLoading, isSuccess }) => ({
-        images: data?.response,
-        totalCount: data?.totalCount,
-        error,
-        isLoading,
-        isSuccessImages: isSuccess,
-      }),
-    },
-  );
+  const { images, isSuccessImages, totalCount, isLoadingImages } =
+    useGetAllImagesQuery(
+      {
+        order,
+        type,
+        breedId: breed,
+        limit,
+        page,
+        userId,
+      },
+      {
+        selectFromResult: ({ data, error, isLoading, isSuccess }) => ({
+          images: data?.response,
+          totalCount: data?.totalCount,
+          error,
+          isLoadingImages: isLoading,
+          isSuccessImages: isSuccess,
+        }),
+      }
+    );
 
   const breedOptions = useOptions(breeds, 'all', 'All Breeds');
 
@@ -63,18 +64,18 @@ const Home = () => {
   const [addFavorite] = useAddFavoriteMutation();
   const [removeFavorite] = useRemoveFavoriteMutation();
 
-  const toggleFavorite = async (photo) => {
-    if (photo.favorite === undefined) {
-      console.log(photo.id);
+  const toggleFavorite = async photo => {
+    if (photo.favourite === undefined) {
+      // console.log(photo.id, 'TOGGLE');
       const favorite = {
         image_id: photo.id,
         sub_id: userId,
       };
       addFavorite(favorite);
     } else {
-      console.log(photo?.favorite.id);
+      // console.log(photo?.favourite.id, 'REMOVE');
 
-      removeFavorite(photo?.favorite.id);
+      removeFavorite(photo?.favourite.id);
     }
   };
 
@@ -85,7 +86,7 @@ const Home = () => {
     });
   }, [page]);
 
-  const paginate = (pageNumber) => setPage(pageNumber);
+  const paginate = pageNumber => setPage(pageNumber);
 
   return (
     <>
@@ -95,8 +96,7 @@ const Home = () => {
         </div>
       )}
       {error && <p>Something went wrong</p>}
-
-      {isSuccessImages && isSuccessBreeds && (
+      {isSuccessBreeds && (
         <>
           {selectOptions && (
             <section className=" flex flex-col  gap-y-3 md:flex-row md:items-center md:justify-between md:gap-x-3 ">
@@ -119,14 +119,22 @@ const Home = () => {
               </NavLink>
             </section>
           )}
-          {isSuccessImages && (
-            <MasonryGallery
-              photos={images}
-              favoriteBtn={favoriteBtn}
-              handleFavorite={toggleFavorite}
-            />
-          )}
-
+          <div className="h-[100%] flex flex-grow-1 justify-center items-center ">
+            {isLoadingImages && (
+              <div className="mt-[100px]">
+                <LoaderSpinner />
+              </div>
+            )}
+            {isSuccessImages && images.length ? (
+              <MasonryGallery
+                photos={images}
+                favoriteBtn={favoriteBtn}
+                handleFavorite={toggleFavorite}
+              />
+            ) : (
+              <div className=" font-bold">No images.</div>
+            )}
+          </div>
           {totalCount > limit && (
             <Pagination
               limit={limit}

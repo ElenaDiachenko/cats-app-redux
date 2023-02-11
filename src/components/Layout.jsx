@@ -8,13 +8,13 @@ import { NavLikes } from './NavLikes';
 import { LoaderSpinner } from './LoaderSpinner';
 
 const Layout = () => {
-  const { darkTheme } = useSelector((state) => state);
+  const { darkTheme } = useSelector(state => state);
   const dispatch = useDispatch();
   const onToggle = () => dispatch(toggleTheme());
 
   return (
-    <div className="bg-zinc-200 dark:bg-gray-800 dark:text-white min-h-screen  ">
-      <div className="max-w-[1400px] mx-auto px-4 lg:px-12 flex flex-col">
+    <div className="bg-zinc-200 dark:bg-gray-800 dark:text-white min-h-screen h-full ">
+      <div className="max-w-[1400px] mx-auto px-4 lg:px-12 flex flex-col w-[100%] min-h-screen">
         <header className="mb-4">
           <nav
             className="border-b border-gray-800 dark:border-gray-200 border-opacity-25 py-2.5 flex

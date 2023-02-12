@@ -19,10 +19,11 @@ export const SelectedSection = memo(
         <div className="flex justify-between  w-full gap-x-3">
           <Select
             options={breedOptions}
+            value={breedOptions.value}
             placeholder="All Breeds"
             classNamePrefix="custom-select"
             className={selectClassName}
-            onChange={(option) => {
+            onChange={option => {
               if (option.value === 'all') {
                 setBreed('');
                 setPage(1);
@@ -35,9 +36,10 @@ export const SelectedSection = memo(
           <Select
             options={selectOptions.type}
             placeholder="Type"
+            value={selectOptions.type.value}
             classNamePrefix="custom-select"
             className={selectClassName}
-            onChange={(option) => {
+            onChange={option => {
               setType(option.value);
             }}
           />
@@ -46,21 +48,23 @@ export const SelectedSection = memo(
           <Select
             options={selectOptions.order}
             placeholder="Order"
+            value={selectOptions.order.value}
             classNamePrefix="custom-select"
             className={selectClassName}
-            onChange={(option) => {
+            onChange={option => {
               setOrder(option.value);
             }}
           />
           <Select
             options={selectOptions.limit}
             placeholder="Limit"
+            value={selectOptions.limit.value}
             classNamePrefix="custom-select"
             className={selectClassName}
-            onChange={(option) => setLimit(option.value)}
+            onChange={option => setLimit(option.value)}
           />
         </div>
       </>
     );
-  },
+  }
 );

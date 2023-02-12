@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { createSelector } from '@reduxjs/toolkit';
 import { MasonryGallery } from '../components/MasonryGallery';
 import { Pagination } from '../components/Pagination';
 import { LoaderSpinner } from '../components/LoaderSpinner';
-import { useGetDislikesQuery, useRemoveVoteMutation } from '../redux/cats';
+import { useRemoveVoteMutation, useGetVotesQuery } from '../redux/cats';
 import { NotFound } from '../components/NotFound';
 
 const Dislikes = () => {
@@ -11,14 +12,40 @@ const Dislikes = () => {
   const [total, setTotal] = useState(null);
   const [page, setPage] = useState(1);
   const [currentPhotos, setCurrentPhotos] = useState([]);
+  const selectLikes = useMemo(() => {
+    const emptyArray = [];
+    return createSelector(
+      [data => data],
+      data => data?.filter(item => item.value === -1) ?? emptyArray
+    );
+  }, []);
+
   const {
     data: dislikes,
     isLoading: isLoadingDislikes,
     isError: isErrorDislikes,
     isSuccess: isSuccessDislikes,
-  } = useGetDislikesQuery(userId, {
-    skip: !userId,
-  });
+  } = useGetVotesQuery(
+    { userId },
+    {
+      skip: !userId,
+      selectFromResult: ({ data, isLoading, isError, isSuccess }) => ({
+        isLoading: isLoading,
+        isError: isError,
+        isSuccess: isSuccess,
+        data: selectLikes(data),
+      }),
+    }
+  );
+
+  // const {
+  //   data: dislikes,
+  //   isLoading: isLoadingDislikes,
+  //   isError: isErrorDislikes,
+  //   isSuccess: isSuccessDislikes,
+  // } = useGetDislikesQuery(userId, {
+  //   skip: !userId,
+  // });
   const [removeVote] = useRemoveVoteMutation();
 
   useEffect(() => {
@@ -36,7 +63,7 @@ const Dislikes = () => {
     });
   }, [page]);
 
-  const paginate = (pageNumber) => setPage(pageNumber);
+  const paginate = pageNumber => setPage(pageNumber);
   return (
     <div>
       {isLoadingDislikes && (

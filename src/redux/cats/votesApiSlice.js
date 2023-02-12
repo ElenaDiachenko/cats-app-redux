@@ -1,37 +1,15 @@
 import { apiSlice } from '../apiSlice';
 
 export const votesApiSlice = apiSlice.injectEndpoints({
-  endpoints: (builder) => ({
+  endpoints: builder => ({
     getVotes: builder.query({
-      query: (userId) => ({
-        url: `/votes?sub_id=${userId}&limit=10&order=DESC`,
-      }),
-      providesTags: [{ type: 'Votes', id: 'LiST' }],
-    }),
-    getDislikes: builder.query({
-      query: (userId) => ({
-        url: `/votes?sub_id=${userId}`,
-        transformResponse(response) {
-          return {
-            response: response.filter((item) => item.value === -1),
-          };
-        },
-      }),
-      providesTags: [{ type: 'Votes', id: 'LiST' }],
-    }),
-    getLikes: builder.query({
-      query: (userId) => ({
-        url: `/votes?sub_id=${userId}`,
-        transformResponse(response) {
-          return {
-            response: response.filter((item) => item.value === 1),
-          };
-        },
+      query: ({ userId, limit }) => ({
+        url: `/votes?sub_id=${userId}&limit=${limit}&order=DESC`,
       }),
       providesTags: [{ type: 'Votes', id: 'LiST' }],
     }),
     addVote: builder.mutation({
-      query: (body) => ({
+      query: body => ({
         url: `/votes`,
         method: 'POST',
         body,
@@ -39,7 +17,7 @@ export const votesApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: [{ type: 'Votes', id: 'LiST' }],
     }),
     removeVote: builder.mutation({
-      query: (id) => ({
+      query: id => ({
         url: `/votes/${id}`,
         method: 'DELETE',
       }),
@@ -48,10 +26,5 @@ export const votesApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const {
-  useGetVotesQuery,
-  useGetDislikesQuery,
-  useGetLikesQuery,
-  useRemoveVoteMutation,
-  useAddVoteMutation,
-} = votesApiSlice;
+export const { useGetVotesQuery, useRemoveVoteMutation, useAddVoteMutation } =
+  votesApiSlice;

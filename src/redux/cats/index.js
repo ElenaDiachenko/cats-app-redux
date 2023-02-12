@@ -7,8 +7,6 @@ import {
 } from './favoritesApiSlice';
 import {
   useGetVotesQuery,
-  useGetDislikesQuery,
-  useGetLikesQuery,
   useRemoveVoteMutation,
   useAddVoteMutation,
 } from './votesApiSlice';
@@ -21,8 +19,6 @@ export {
   useRemoveFavoriteMutation,
   useAddFavoriteMutation,
   useGetVotesQuery,
-  useGetDislikesQuery,
-  useGetLikesQuery,
   useRemoveVoteMutation,
   useAddVoteMutation,
 };

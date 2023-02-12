@@ -15,9 +15,12 @@ const Voting = () => {
   const [userId] = useState(JSON.parse(localStorage.getItem('catsapi_userId')));
   const [clicked, setClicked] = useState(false);
   const [userActions, setUserActions] = useState([]);
-  const { data: votes, isSuccess: isSuccessVotes } = useGetVotesQuery(userId, {
-    skip: !userId,
-  });
+  const { data: votes, isSuccess: isSuccessVotes } = useGetVotesQuery(
+    { userId, limit: 10 },
+    {
+      skip: !userId,
+    }
+  );
   const { favorites, isSuccessFavorites } = useGetAllFavoriteQuery(
     {
       userId,
@@ -30,7 +33,7 @@ const Voting = () => {
         favorites: data?.response,
         isSuccessFavorites: isSuccess,
       }),
-    },
+    }
   );
 
   const [addFavorite] = useAddFavoriteMutation();
@@ -55,7 +58,7 @@ const Voting = () => {
       const sortedResult = [...result].sort(
         (a, b) =>
           Number(new Date(b.created_at).getTime()) -
-          Number(new Date(a.created_at).getTime()),
+          Number(new Date(a.created_at).getTime())
       );
 
       setUserActions(sortedResult.slice(0, 10));
@@ -72,7 +75,7 @@ const Voting = () => {
     setClicked(true);
   };
 
-  const handleFavorite = (id) => {
+  const handleFavorite = id => {
     const favorite = {
       image_id: id,
       sub_id: userId,
@@ -114,7 +117,7 @@ const Voting = () => {
       </div>
       <div className=" w-full lg:w-[50%] flex  flex-col gap-y-3">
         {userActions.length > 0 &&
-          userActions.map((it) => (
+          userActions.map(it => (
             <div
               key={it.id}
               className="flex  justify-between items-center p-3 rounded  bg-white dark:bg-slate-600"

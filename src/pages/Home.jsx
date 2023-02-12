@@ -90,14 +90,14 @@ const Home = () => {
 
   return (
     <>
-      {isLoadingBreeds && (
-        <div className="mt-[100px]">
-          <LoaderSpinner />
-        </div>
-      )}
-      {error && <p>Something went wrong</p>}
       {isSuccessBreeds && (
-        <>
+        <div className="  min-h-full flex flex-col justify-start ">
+          {isLoadingBreeds && (
+            <div className="mt-[100px]">
+              <LoaderSpinner />
+            </div>
+          )}
+          {error && <p>Something went wrong</p>}
           {selectOptions && (
             <section className=" flex flex-col  gap-y-3 md:flex-row md:items-center md:justify-between md:gap-x-3 ">
               <SelectedSection
@@ -119,23 +119,21 @@ const Home = () => {
               </NavLink>
             </section>
           )}
-          <div className="h-[100%] flex flex-grow-1 justify-center items-center ">
-            {isLoadingImages && (
-              <div className="mt-[100px]">
-                <LoaderSpinner />
-              </div>
-            )}
-            {isSuccessImages && images.length ? (
-              <MasonryGallery
-                photos={images}
-                favoriteBtn={favoriteBtn}
-                handleFavorite={toggleFavorite}
-              />
-            ) : (
-              <div className=" font-bold">No images.</div>
-            )}
-          </div>
-          {totalCount > limit && (
+          {isLoadingImages && (
+            <div className="mt-[100px]">
+              <LoaderSpinner />
+            </div>
+          )}
+          {isSuccessImages && images.length ? (
+            <MasonryGallery
+              photos={images}
+              favoriteBtn={favoriteBtn}
+              handleFavorite={toggleFavorite}
+            />
+          ) : (
+            <div className=" font-bold">No images.</div>
+          )}
+          {totalCount > limit && !isLoadingImages ? (
             <Pagination
               limit={limit}
               total={totalCount}
@@ -145,8 +143,8 @@ const Home = () => {
               contentPerPage={5}
               siblingCount={1}
             />
-          )}
-        </>
+          ) : null}
+        </div>
       )}
     </>
   );

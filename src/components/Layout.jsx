@@ -13,9 +13,9 @@ const Layout = () => {
   const onToggle = () => dispatch(toggleTheme());
 
   return (
-    <div className="bg-zinc-200 dark:bg-gray-800 dark:text-white min-h-screen h-full ">
-      <div className="max-w-[1400px] mx-auto px-4 lg:px-12 flex flex-col w-[100%] min-h-screen">
-        <header className="mb-4">
+    <div className="bg-zinc-200 dark:bg-gray-800 dark:text-white min-h-screen flex flex-col">
+      <div className="max-w-[1400px] w-full mx-auto px-4 lg:px-12 h-full pb-6 ">
+        <header className="mb-4 h-[61px]">
           <nav
             className="border-b border-gray-800 dark:border-gray-200 border-opacity-25 py-2.5 flex
           justify-between
@@ -42,11 +42,9 @@ const Layout = () => {
             </div>
           </nav>
         </header>
-        <div className="min-h-[100%] flex flex-col">
-          <Suspense fallback={<LoaderSpinner />}>
-            <Outlet />
-          </Suspense>
-        </div>
+        <Suspense fallback={<LoaderSpinner />}>
+          <Outlet />
+        </Suspense>
       </div>
     </div>
   );

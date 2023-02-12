@@ -24,7 +24,7 @@ export const Pagination = ({
   const commonClassName =
     'rounded flex justify-center items-center w-[40px] h-[40px] font-bold border border-transparent hover:bg-gray-50 dark:hover:bg-gray-700';
 
-  const changePage = (e) => {
+  const changePage = e => {
     const pageNumber = Number(e.target.textContent);
     paginate(pageNumber);
   };

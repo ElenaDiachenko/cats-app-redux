@@ -26,14 +26,22 @@ const Dislikes = () => {
     isLoading: isLoadingDislikes,
     isError: isErrorDislikes,
     isSuccess: isSuccessDislikes,
+    isFetching: isFetchingDislikes,
   } = useGetVotesQuery(
     { userId },
     {
       skip: !userId,
-      selectFromResult: ({ data, isLoading, isError, isSuccess }) => ({
+      selectFromResult: ({
+        data,
+        isLoading,
+        isError,
+        isSuccess,
+        isFetching,
+      }) => ({
         isLoading: isLoading,
         isError: isError,
         isSuccess: isSuccess,
+        isFetching: isFetching,
         data: selectLikes(data),
       }),
     }
@@ -59,18 +67,19 @@ const Dislikes = () => {
   const paginate = pageNumber => setPage(pageNumber);
   return (
     <div>
-      {isLoadingDislikes && (
+      {isLoadingDislikes || isFetchingDislikes ? (
         <div className="mt-[100px]">
           <LoaderSpinner />
         </div>
-      )}
+      ) : null}
+
       {isErrorDislikes && <p>Something went wrong</p>}
-      {!isLoadingDislikes &&
-        (currentPhotos.length ? (
-          <MasonryGallery photos={currentPhotos} removeVote={removeVote} />
-        ) : (
-          <NotFound title={'Dislikes'} />
-        ))}
+
+      {!isLoadingDislikes && !isFetchingDislikes && currentPhotos.length ? (
+        <MasonryGallery photos={currentPhotos} removeVote={removeVote} />
+      ) : (
+        <NotFound title={'Dislikes'} />
+      )}
       {total > limit && (
         <Pagination
           limit={limit}

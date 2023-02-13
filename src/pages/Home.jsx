@@ -34,26 +34,38 @@ const Home = () => {
     isSuccess: isSuccessBreeds,
   } = useGetBreedListQuery();
 
-  const { images, isSuccessImages, totalCount, isLoadingImages } =
-    useGetAllImagesQuery(
-      {
-        order,
-        type,
-        breedId: breed,
-        limit,
-        page,
-        userId,
-      },
-      {
-        selectFromResult: ({ data, error, isLoading, isSuccess }) => ({
-          images: data?.response,
-          totalCount: data?.totalCount,
-          error,
-          isLoadingImages: isLoading,
-          isSuccessImages: isSuccess,
-        }),
-      }
-    );
+  const {
+    images,
+    isSuccessImages,
+    totalCount,
+    isLoadingImages,
+    isFetchingImages,
+  } = useGetAllImagesQuery(
+    {
+      order,
+      type,
+      breedId: breed,
+      limit,
+      page,
+      userId,
+    },
+    {
+      selectFromResult: ({
+        data,
+        error,
+        isLoading,
+        isSuccess,
+        isFetching,
+      }) => ({
+        images: data?.response,
+        totalCount: data?.totalCount,
+        error,
+        isLoadingImages: isLoading,
+        isSuccessImages: isSuccess,
+        isFetchingImages: isFetching,
+      }),
+    }
+  );
 
   const breedOptions = useOptions(breeds, 'all', 'All Breeds');
 
@@ -119,12 +131,15 @@ const Home = () => {
               </NavLink>
             </section>
           )}
-          {isLoadingImages && (
+          {isLoadingImages && isFetchingImages ? (
             <div className="mt-[100px]">
               <LoaderSpinner />
             </div>
-          )}
-          {isSuccessImages && images.length ? (
+          ) : null}
+          {isSuccessImages &&
+          images.length &&
+          !isFetchingImages &&
+          !isLoadingImages ? (
             <MasonryGallery
               photos={images}
               favoriteBtn={favoriteBtn}
@@ -133,7 +148,8 @@ const Home = () => {
           ) : (
             <div className=" font-bold">No images.</div>
           )}
-          {totalCount > limit && !isLoadingImages ? (
+
+          {totalCount > limit && !isFetchingImages && !isLoadingImages ? (
             <Pagination
               limit={limit}
               total={totalCount}

@@ -15,6 +15,7 @@ const Breeds = () => {
   const [total, setTotal] = useState(null);
   const [link] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+
   const {
     data: breeds = [],
     error,
@@ -33,7 +34,7 @@ const Breeds = () => {
       setCurrentPage(1);
       return;
     }
-    const result = breeds.filter((breed) => breed.id === query);
+    const result = breeds.filter(breed => breed.id === query);
     setShownPhotos(result);
   }, [breeds, isSuccess, query]);
 
@@ -44,14 +45,14 @@ const Breeds = () => {
     setCurrentPhotos(shownPhotos.slice(indexOfFirstItem, indexOfLastItem));
   }, [currentPage, limit, shownPhotos]);
 
-  const paginate = (pageNumber) => {
+  const paginate = pageNumber => {
     setCurrentPage(pageNumber);
   };
 
   const selectClassName =
     'focus:outline-0 md:w-[30%] font-bold text-gray-900 dark:text-white bg-gray-50 border border-gray-300 focus:border-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-100';
   return (
-    <>
+    <div className="min-h-full flex flex-col">
       {isLoading && (
         <div className="mt-[100px]">
           <LoaderSpinner />
@@ -68,7 +69,7 @@ const Breeds = () => {
                 placeholder="All Breeds"
                 classNamePrefix="custom-select"
                 className={selectClassName}
-                onChange={(option) => {
+                onChange={option => {
                   setQuery(option.value);
                 }}
               />
@@ -79,17 +80,18 @@ const Breeds = () => {
               placeholder="Limit"
               classNamePrefix="custom-select"
               className={selectClassName}
-              onChange={(option) => {
+              onChange={option => {
                 setLimit(option.value);
               }}
             />
           </section>
 
           {currentPhotos && (
-            <MasonryGallery photos={currentPhotos} link={link} />
+            <div className="h-[calc(100%-60px)]">
+              <MasonryGallery photos={currentPhotos} link={link} />
+            </div>
           )}
-
-          {total > limit && currentPhotos.length > 1 && (
+          {total > limit && currentPhotos.length > 1 ? (
             <Pagination
               limit={limit}
               total={total}
@@ -99,10 +101,10 @@ const Breeds = () => {
               contentPerPage={5}
               siblingCount={1}
             />
-          )}
+          ) : null}
         </>
       )}
-    </>
+    </div>
   );
 };
 

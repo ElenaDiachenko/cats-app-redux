@@ -12,7 +12,8 @@ const Favorites = () => {
   const [userId] = useState(JSON.parse(localStorage.getItem('catsapi_userId')));
   const [limit] = useState(10);
   const [page, setPage] = useState(1);
-  const { favorites, isSuccess, isLoading, isError, totalCount } =
+
+  const { favorites, isSuccess, isLoading, isError, totalCount, isFetching } =
     useGetAllFavoriteQuery(
       {
         userId,
@@ -20,14 +21,21 @@ const Favorites = () => {
         page: page - 1,
       },
       {
-        selectFromResult: ({ data, isError, isLoading, isSuccess }) => ({
+        selectFromResult: ({
+          data,
+          isError,
+          isLoading,
+          isSuccess,
+          isFetching,
+        }) => ({
           favorites: data?.response,
           totalCount: data?.totalCount,
           isError,
           isLoading,
           isSuccess,
+          isFetching,
         }),
-      },
+      }
     );
   const [removeFavorite] = useRemoveFavoriteMutation();
 
@@ -38,14 +46,14 @@ const Favorites = () => {
     });
   }, [page]);
 
-  const paginate = (pageNumber) => setPage(pageNumber);
+  const paginate = pageNumber => setPage(pageNumber);
   return (
     <div>
-      {isLoading && (
+      {isLoading || isFetching ? (
         <div className="mt-[100px]">
           <LoaderSpinner />
         </div>
-      )}
+      ) : null}
       {isError && <p>Something went wrong</p>}
 
       {isSuccess && (

@@ -24,7 +24,7 @@ export const MasonryGallery = ({
               >
                 <div className="relative">
                   <img
-                    className="rounded w-full block"
+                    className="rounded w-full h-full block"
                     src={photo?.image?.url ?? photo?.url}
                     alt=""
                   />
@@ -39,7 +39,11 @@ export const MasonryGallery = ({
           : favoriteBtn
           ? photos.map(photo => (
               <div className="relative" key={photo.id}>
-                <img className="rounded w-full block" src={photo?.url} alt="" />
+                <img
+                  className="rounded w-full h-full block"
+                  src={photo?.url}
+                  alt=""
+                />
                 <div className="absolute top-0 left-0 w-full h-full hover:bg-black/60 opacity-0 hover:opacity-100 text-white">
                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                     {photo?.favourite ? (
@@ -62,11 +66,11 @@ export const MasonryGallery = ({
           : photos.map(photo => (
               <div className="relative" key={photo.id}>
                 <img
-                  className="rounded w-full block"
+                  className="rounded w-full h-full block"
                   src={photo?.image?.url}
                   alt=""
                 />
-                <p className="absolute top-4 right-4 p-1.5 rounded opacity-30 hover:opacity-100 text-gray-900 bg-gray-100 border border-gray-300  dark:bg-gray-700 dark:border-gray-600  dark:text-white flex justify-center items-center ">
+                <p className="absolute top-4 right-4 p-1.5 rounded opacity-30 hover:opacity-100 hover:cursor-pointer text-gray-900 bg-gray-100 border border-gray-300  dark:bg-gray-700 dark:border-gray-600  dark:text-white flex justify-center items-center ">
                   <RiDeleteBin6Fill
                     size={35}
                     onClick={() => removeVote(photo.id)}

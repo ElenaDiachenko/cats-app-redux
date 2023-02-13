@@ -57,6 +57,7 @@ export const Pagination = ({
           </button>
         );
       })}
+      
       {currentPage !== totalPageCount && (
         <button
           onClick={() => paginate(currentPage + 1)}

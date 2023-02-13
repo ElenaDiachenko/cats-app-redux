@@ -11,8 +11,8 @@ const Dislikes = () => {
   const [limit] = useState(10);
   const [total, setTotal] = useState(null);
   const [page, setPage] = useState(1);
-  const [currentPhotos, setCurrentPhotos] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [currentPhotos, setCurrentPhotos] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const selectLikes = useMemo(() => {
     const emptyArray = [];
@@ -58,6 +58,7 @@ const Dislikes = () => {
       setIsLoading(false);
       return;
     }
+
     const indexOfLastItem = page * limit;
     const indexOfFirstItem = indexOfLastItem - limit;
     setCurrentPhotos(dislikes.slice(indexOfFirstItem, indexOfLastItem));
@@ -82,20 +83,22 @@ const Dislikes = () => {
   const paginate = pageNumber => setPage(pageNumber);
   return (
     <div className="h-full w-full">
-      {isLoading ? (
+      {isLoading || isLoadingDislikes || isFetchingDislikes ? (
         <div className="flex items-center justify-center h-full w-full">
           <LoaderSpinner />
         </div>
-      ) : null}
-
-      {isErrorDislikes && <p>Something went wrong</p>}
-
-      {!isLoading && currentPhotos.length > 0 ? (
+      ) : currentPhotos ? (
         <MasonryGallery photos={currentPhotos} removeVote={removeVote} />
       ) : (
         <NotFound title={'Dislikes'} />
       )}
-      {total > limit && (
+      {isErrorDislikes && (
+        <p className="flex items-center justify-center h-full w-full font-bold">
+          Something went wrong
+        </p>
+      )}
+
+      {total > limit && currentPhotos ? (
         <Pagination
           limit={limit}
           total={total}
@@ -105,7 +108,7 @@ const Dislikes = () => {
           contentPerPage={5}
           siblingCount={1}
         />
-      )}
+      ) : null}
     </div>
   );
 };

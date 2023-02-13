@@ -12,6 +12,7 @@ const Dislikes = () => {
   const [total, setTotal] = useState(null);
   const [page, setPage] = useState(1);
   const [currentPhotos, setCurrentPhotos] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const selectLikes = useMemo(() => {
     const emptyArray = [];
@@ -26,14 +27,22 @@ const Dislikes = () => {
     isLoading: isLoadingDislikes,
     isError: isErrorDislikes,
     isSuccess: isSuccessDislikes,
+    isFetching: isFetchingDislikes,
   } = useGetVotesQuery(
     { userId },
     {
       skip: !userId,
-      selectFromResult: ({ data, isLoading, isError, isSuccess }) => ({
+      selectFromResult: ({
+        data,
+        isLoading,
+        isError,
+        isSuccess,
+        isFetching,
+      }) => ({
         isLoading: isLoading,
         isError: isError,
         isSuccess: isSuccess,
+        isFetching: isFetching,
         data: selectLikes(data),
       }),
     }
@@ -42,12 +51,26 @@ const Dislikes = () => {
   const [removeVote] = useRemoveVoteMutation();
 
   useEffect(() => {
-    if (!isSuccessDislikes) return;
+    if (isLoadingDislikes || isFetchingDislikes) {
+      setIsLoading(true);
+    }
+    if (!isSuccessDislikes) {
+      setIsLoading(false);
+      return;
+    }
     const indexOfLastItem = page * limit;
     const indexOfFirstItem = indexOfLastItem - limit;
     setCurrentPhotos(dislikes.slice(indexOfFirstItem, indexOfLastItem));
     setTotal(dislikes.length);
-  }, [dislikes, isSuccessDislikes, limit, page]);
+    setIsLoading(false);
+  }, [
+    dislikes,
+    isFetchingDislikes,
+    isLoadingDislikes,
+    isSuccessDislikes,
+    limit,
+    page,
+  ]);
 
   useEffect(() => {
     window.scrollTo({
@@ -58,19 +81,20 @@ const Dislikes = () => {
 
   const paginate = pageNumber => setPage(pageNumber);
   return (
-    <div>
-      {isLoadingDislikes && (
-        <div className="mt-[100px]">
+    <div className="h-full w-full">
+      {isLoading ? (
+        <div className="flex items-center justify-center h-full w-full">
           <LoaderSpinner />
         </div>
-      )}
+      ) : null}
+
       {isErrorDislikes && <p>Something went wrong</p>}
-      {!isLoadingDislikes &&
-        (currentPhotos.length ? (
-          <MasonryGallery photos={currentPhotos} removeVote={removeVote} />
-        ) : (
-          <NotFound title={'Dislikes'} />
-        ))}
+
+      {!isLoading && currentPhotos.length > 0 ? (
+        <MasonryGallery photos={currentPhotos} removeVote={removeVote} />
+      ) : (
+        <NotFound title={'Dislikes'} />
+      )}
       {total > limit && (
         <Pagination
           limit={limit}

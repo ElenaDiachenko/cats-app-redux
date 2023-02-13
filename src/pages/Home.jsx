@@ -27,6 +27,7 @@ const Home = () => {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
   const [favoriteBtn] = useState(true);
+
   const {
     data: breeds = [],
     error,
@@ -131,7 +132,7 @@ const Home = () => {
               </NavLink>
             </section>
           )}
-          {isLoadingImages && isFetchingImages ? (
+          {isLoadingImages || isFetchingImages ? (
             <div className="mt-[100px]">
               <LoaderSpinner />
             </div>

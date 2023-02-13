@@ -12,6 +12,7 @@ const Dislikes = () => {
   const [total, setTotal] = useState(null);
   const [page, setPage] = useState(1);
   const [currentPhotos, setCurrentPhotos] = useState([]);
+
   const selectLikes = useMemo(() => {
     const emptyArray = [];
     return createSelector(
@@ -38,14 +39,6 @@ const Dislikes = () => {
     }
   );
 
-  // const {
-  //   data: dislikes,
-  //   isLoading: isLoadingDislikes,
-  //   isError: isErrorDislikes,
-  //   isSuccess: isSuccessDislikes,
-  // } = useGetDislikesQuery(userId, {
-  //   skip: !userId,
-  // });
   const [removeVote] = useRemoveVoteMutation();
 
   useEffect(() => {

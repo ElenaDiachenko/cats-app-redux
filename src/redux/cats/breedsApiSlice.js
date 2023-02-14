@@ -4,9 +4,8 @@ export const breedsApiSlice = apiSlice.injectEndpoints({
   endpoints: builder => ({
     getBreedList: builder.query({
       query: () => `breeds`,
-      // providesTags: result =>
-      //   result ? result.map(({ id }) => ({ type: 'Breeds', id })) : [],
-      providesTags: ['Breeds'],
+      providesTags: result =>
+        result ? result.map(({ id }) => ({ type: 'Breeds', id })) : ['Breeds'],
     }),
     getBreedById: builder.query({
       query: id => `/images/search?limit=15&breed_ids=${id}`,

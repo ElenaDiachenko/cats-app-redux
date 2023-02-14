@@ -11,14 +11,13 @@ export const favoritesApiSlice = apiSlice.injectEndpoints({
           totalCount: Number(meta.response.headers.get('pagination-count')),
         };
       },
-      // providesTags: result =>
-      //   result
-      //     ? [
-      //         ...result.map(item => ({ type: 'Favorites', id: item.id })),
-      //         { type: 'Favorites', id: 'LiST' },
-      //       ]
-      //     : [],
-      providesTags: [{ type: 'Favorites', id: 'LiST' }],
+      providesTags: result =>
+        result?.response
+          ? [
+              ...result.response.map(({ id }) => ({ type: 'Favorites', id })),
+              { type: 'Favorites', id: 'LiST' },
+            ]
+          : [{ type: 'Favorites', id: 'LiST' }],
     }),
     addFavorite: builder.mutation({
       query: body => ({
@@ -26,9 +25,9 @@ export const favoritesApiSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body,
       }),
-      invalidatesTags: [
-        { type: 'Images', id: 'LiST' },
-        { type: 'Favorites', id: 'LiST' },
+      invalidatesTags: (result, error, body) => [
+        { type: 'Images', id: body.image_id },
+        { type: 'Favorites', id: result.id },
       ],
     }),
     removeFavorite: builder.mutation({
@@ -36,9 +35,10 @@ export const favoritesApiSlice = apiSlice.injectEndpoints({
         url: `/favourites/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: [
-        { type: 'Favorites', id: 'LiST' },
-        { type: 'Images', id: 'LiST' },
+
+      invalidatesTags: (result, error, id) => [
+        { type: 'Images', id },
+        { type: 'Favorites', id },
       ],
     }),
   }),

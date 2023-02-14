@@ -11,15 +11,28 @@ export const imagesApiSlice = apiSlice.injectEndpoints({
           totalCount: Number(meta.response.headers.get('pagination-count')),
         };
       },
-      providesTags: [{ type: 'Images', id: 'LiST' }],
-      //   providesTags: result =>
-      //     result
-      //       ? result.map(item =>
-      //           item?.favourite
-      //             ? { type: 'Images', id: item.favourite.id }
-      //             : { type: 'Images', id: item.id }
-      //         )
-      //       : [],
+      // providesTags: [{ type: 'Images', id: 'LiST' }],
+      providesTags: result =>
+        result?.response
+          ? result?.response.map(item =>
+              item?.favourite
+                ? { type: 'Images', id: item.favourite.id }
+                : { type: 'Images', id: item.id }
+            )
+          : ['Images'],
+    }),
+    getImageById: builder.query({
+      query: id => `/images/${id}`,
+      providesTags: (result, error, id) => [{ type: 'Images', id }],
+      // providesTags: [{ type: 'Images', id: 'LiST' }],
+      // providesTags: result =>
+      //   result
+      //     ? result.map(item =>
+      //         item?.favourite
+      //           ? { type: 'Images', id: item.favourite.id }
+      //           : { type: 'Images', id: item.id }
+      //       )
+      //     : [],
     }),
   }),
 });

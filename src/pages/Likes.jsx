@@ -82,9 +82,9 @@ const Likes = () => {
         </div>
       ) : currentPhotos ? (
         <MasonryGallery photos={currentPhotos} removeVote={removeVote} />
-      ) : (
+      ) : !isErrorLikes ? (
         <NotFound title={'Likes'} />
-      )}
+      ) : null}
       {isErrorLikes && (
         <p className="flex items-center justify-center h-full w-full font-bold">
           Something went wrong

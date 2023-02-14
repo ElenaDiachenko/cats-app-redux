@@ -11,7 +11,15 @@ export const imagesApiSlice = apiSlice.injectEndpoints({
           totalCount: Number(meta.response.headers.get('pagination-count')),
         };
       },
-      providesTags: [{ type: 'Favorites', id: 'LiST' }],
+      providesTags: [{ type: 'Images', id: 'LiST' }],
+      //   providesTags: result =>
+      //     result
+      //       ? result.map(item =>
+      //           item?.favourite
+      //             ? { type: 'Images', id: item.favourite.id }
+      //             : { type: 'Images', id: item.id }
+      //         )
+      //       : [],
     }),
   }),
 });

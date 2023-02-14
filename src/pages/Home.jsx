@@ -37,7 +37,7 @@ const Home = () => {
 
   const {
     images,
-    isSuccessImages,
+    // isSuccessImages,
     totalCount,
     isLoadingImages,
     isFetchingImages,
@@ -105,11 +105,11 @@ const Home = () => {
     <>
       {isSuccessBreeds && (
         <div className="  min-h-full flex flex-col justify-start ">
-          {isLoadingBreeds && (
+          {isLoadingBreeds ? (
             <div className="mt-[100px]">
               <LoaderSpinner />
             </div>
-          )}
+          ) : null}
           {error && <p>Something went wrong</p>}
           {selectOptions && (
             <section className=" flex flex-col  gap-y-3 md:flex-row md:items-center md:justify-between md:gap-x-3 ">
@@ -132,35 +132,33 @@ const Home = () => {
               </NavLink>
             </section>
           )}
+
           {isLoadingImages || isFetchingImages ? (
             <div className="mt-[100px]">
               <LoaderSpinner />
             </div>
-          ) : null}
-          {isSuccessImages &&
-          images.length &&
-          !isFetchingImages &&
-          !isLoadingImages ? (
-            <MasonryGallery
-              photos={images}
-              favoriteBtn={favoriteBtn}
-              handleFavorite={toggleFavorite}
-            />
+          ) : images?.length > 0 ? (
+            <div className="min-h-full">
+              <MasonryGallery
+                photos={images}
+                favoriteBtn={favoriteBtn}
+                handleFavorite={toggleFavorite}
+              />
+              {totalCount > limit ? (
+                <Pagination
+                  limit={limit}
+                  total={totalCount}
+                  paginate={paginate}
+                  currentPage={page}
+                  buttonConst={3}
+                  contentPerPage={5}
+                  siblingCount={1}
+                />
+              ) : null}
+            </div>
           ) : (
             <div className=" font-bold">No images.</div>
           )}
-
-          {totalCount > limit && !isFetchingImages && !isLoadingImages ? (
-            <Pagination
-              limit={limit}
-              total={totalCount}
-              paginate={paginate}
-              currentPage={page}
-              buttonConst={3}
-              contentPerPage={5}
-              siblingCount={1}
-            />
-          ) : null}
         </div>
       )}
     </>

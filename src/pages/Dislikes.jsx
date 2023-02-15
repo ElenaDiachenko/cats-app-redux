@@ -11,7 +11,7 @@ const Dislikes = () => {
   const [limit] = useState(10);
   const [total, setTotal] = useState(null);
   const [page, setPage] = useState(1);
-  const [currentPhotos, setCurrentPhotos] = useState(null);
+  const [currentPhotos, setCurrentPhotos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const selectLikes = useMemo(() => {
@@ -87,11 +87,11 @@ const Dislikes = () => {
         <div className="flex items-center justify-center h-full w-full">
           <LoaderSpinner />
         </div>
-      ) : currentPhotos ? (
+      ) : currentPhotos.length > 0 ? (
         <MasonryGallery photos={currentPhotos} removeVote={removeVote} />
-      ) : !isErrorDislikes ? (
+      ) :  (
         <NotFound title={'Dislikes'} />
-      ) : null}
+      ) }
       {isErrorDislikes && (
         <p className="flex items-center justify-center h-full w-full font-bold">
           Something went wrong

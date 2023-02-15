@@ -14,17 +14,21 @@ export const NavMenu = () => {
     ' rounded  border border-gray-800  p-1 md:px-2.5 md:py-1 dark:border-gray-500 hover:opacity-50 cursor-pointer ';
   return (
     <>
-      {links.map((link) => (
-        <NavLink
-          className={({ isActive }) =>
-            isActive ? activeClassName : ' hover:opacity-50 cursor-pointer'
-          }
-          key={link.path}
-          to={link.path}
-        >
-          <span className="hidden sm:inline-block"> {link.title}</span>
-          <span className="inline-block sm:hidden">{link.icon}</span>
-        </NavLink>
+      {links.map(link => (
+        <li>
+          <NavLink
+            role="menuitem"
+            aria-label={link.title}
+            className={({ isActive }) =>
+              isActive ? activeClassName : ' hover:opacity-50 cursor-pointer'
+            }
+            key={link.path}
+            to={link.path}
+          >
+            <span className="hidden sm:inline-block"> {link.title}</span>
+            <span className="inline-block sm:hidden">{link.icon}</span>
+          </NavLink>
+        </li>
       ))}
     </>
   );

@@ -5,7 +5,7 @@ export const LoaderSpinner = () => {
         className="spinner-border animate-spin inline-block w-10 h-10 border-4 border-gray-700 dark:border-gray-50 rounded-full "
         role="status"
       >
-        <span className="visually-hidden"></span>
+        <span className="sr-only">Loading</span>
       </div>
     </div>
   );

@@ -104,7 +104,7 @@ const Home = () => {
   return (
     <>
       {isSuccessBreeds && (
-        <div className="  min-h-full flex flex-col justify-start ">
+        <main className="  min-h-full flex flex-col justify-start ">
           {isLoadingBreeds ? (
             <div className="mt-[100px]">
               <LoaderSpinner />
@@ -159,7 +159,7 @@ const Home = () => {
           ) : (
             <div className=" font-bold">No images.</div>
           )}
-        </div>
+        </main>
       )}
     </>
   );

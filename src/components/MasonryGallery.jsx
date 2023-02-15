@@ -26,7 +26,7 @@ export const MasonryGallery = ({
                   <img
                     className="rounded w-full h-full block"
                     src={photo?.image?.url ?? photo?.url}
-                    alt=""
+                    alt="cute cat"
                   />
                   {photo.name && (
                     <p className="absolute bottom-0 left-0 w-full text-center rounded-b text-white bg-black/50 py-3 font-bold">
@@ -42,18 +42,22 @@ export const MasonryGallery = ({
                 <img
                   className="rounded w-full h-full block"
                   src={photo?.url}
-                  alt=""
+                  alt="cute cat"
                 />
                 <div className="absolute top-0 left-0 w-full h-full hover:bg-black/60 opacity-0 hover:opacity-100 text-white">
                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                     {photo?.favourite ? (
                       <FaHeart
+                        role="button"
+                        aria-label="Add favorite"
                         onClick={() => handleFavorite(photo)}
                         className="fill-red-400 cursor-pointer"
                         size={35}
                       />
                     ) : (
                       <FaRegHeart
+                        role="button"
+                        aria-label="Remove favorite"
                         onClick={() => handleFavorite(photo)}
                         className="fill-red-400 cursor-pointer"
                         size={35}
@@ -68,10 +72,12 @@ export const MasonryGallery = ({
                 <img
                   className="rounded w-full h-full block"
                   src={photo?.image?.url}
-                  alt=""
+                  alt="cute cat"
                 />
                 <p className="absolute top-4 right-4 p-1.5 rounded opacity-30 hover:opacity-100 hover:cursor-pointer text-gray-900 bg-gray-100 border border-gray-300  dark:bg-gray-700 dark:border-gray-600  dark:text-white flex justify-center items-center ">
                   <RiDeleteBin6Fill
+                    role="button"
+                    aria-label="remove"
                     size={35}
                     onClick={() => removeVote(photo.id)}
                   />

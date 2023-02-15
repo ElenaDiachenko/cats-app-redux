@@ -30,9 +30,13 @@ export const Pagination = ({
   };
 
   return (
-    <div className="mt-5 flex justify-center items-center gap-x-4">
+    <nav
+      aria-label="pagination"
+      className="mt-5 flex justify-center items-center gap-x-4"
+    >
       {currentPage > 1 && (
         <button
+          aria-label="previous"
           onClick={() => paginate(currentPage - 1)}
           className={commonClassName}
         >
@@ -53,6 +57,7 @@ export const Pagination = ({
             onClick={changePage}
             className={currentPage === item ? activeClassName : commonClassName}
           >
+            <span className="sr-only">page</span>
             <span>{item}</span>
           </button>
         );
@@ -60,12 +65,13 @@ export const Pagination = ({
 
       {currentPage !== totalPageCount && (
         <button
+          aria-label="next"
           onClick={() => paginate(currentPage + 1)}
           className={commonClassName}
         >
           <BsArrowRight size={23} />
         </button>
       )}
-    </div>
+    </nav>
   );
 };

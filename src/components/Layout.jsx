@@ -41,14 +41,14 @@ const Layout = () => {
                   <BsFillMoonFill
                     aria-hidden="true"
                     onClick={() => onToggle()}
-                    size={30}
+                    size={27}
                     className="rounded bg-transparent flex justify-center items-center  hover:opacity-50 cursor-pointer"
                   />
                 ) : (
                   <BsSun
                     aria-hidden="true"
                     onClick={() => onToggle()}
-                    size={30}
+                    size={27}
                     className="rounded bg-transparent flex justify-center items-center  hover:opacity-50 cursor-pointer"
                   />
                 )}

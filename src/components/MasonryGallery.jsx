@@ -12,7 +12,7 @@ export const MasonryGallery = ({
 }) => {
   return (
     <ResponsiveMasonry
-      className="mt-6 "
+      className="mt-6 grow-1 "
       columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}
     >
       <Masonry gutter="20px">
@@ -24,7 +24,7 @@ export const MasonryGallery = ({
               >
                 <div className="relative">
                   <img
-                    className="rounded w-full h-full block"
+                    className="rounded w-full h-full block min-h-[250px]"
                     src={photo?.image?.url ?? photo?.url}
                     alt="cute cat"
                   />

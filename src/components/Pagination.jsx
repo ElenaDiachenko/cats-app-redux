@@ -6,11 +6,12 @@ export const Pagination = ({
   total,
   currentPage,
   buttonConst,
+  contentPerPage,
   limit,
   siblingCount,
   paginate,
 }) => {
-  const totalPageCount = Math.ceil(total / limit);
+  const totalPageCount = Math.floor(total / limit);
 
   const paginationRange = usePaginationRange({
     totalPageCount,
@@ -32,7 +33,7 @@ export const Pagination = ({
   return (
     <nav
       aria-label="pagination"
-      className="mt-5 flex justify-center items-center gap-x-4"
+      className="mt-5 flex justify-center items-center gap-x-4 grow-0"
     >
       {currentPage > 1 && (
         <button
@@ -43,25 +44,28 @@ export const Pagination = ({
           <BsArrowLeft size={23} />
         </button>
       )}
-      {paginationRange.map((item, index) => {
-        if (item === DOTS) {
+      {paginationRange &&
+        paginationRange.map((item, index) => {
+          if (item === DOTS) {
+            return (
+              <button key={index} className={commonClassName}>
+                &#8230;
+              </button>
+            );
+          }
           return (
-            <button key={index} className={commonClassName}>
-              &#8230;
+            <button
+              key={index}
+              onClick={changePage}
+              className={
+                currentPage === item ? activeClassName : commonClassName
+              }
+            >
+              <span className="sr-only">page</span>
+              <span>{item}</span>
             </button>
           );
-        }
-        return (
-          <button
-            key={index}
-            onClick={changePage}
-            className={currentPage === item ? activeClassName : commonClassName}
-          >
-            <span className="sr-only">page</span>
-            <span>{item}</span>
-          </button>
-        );
-      })}
+        })}
 
       {currentPage !== totalPageCount && (
         <button

@@ -25,7 +25,7 @@ const Home = () => {
   const [type, setType] = useState('gif,jpg,png');
   const [breed, setBreed] = useState('');
   const [limit, setLimit] = useState(10);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [favoriteBtn] = useState(true);
 
   const {
@@ -112,7 +112,7 @@ const Home = () => {
           ) : null}
           {error && <p>Something went wrong</p>}
           {selectOptions && (
-            <section className=" flex flex-col  gap-y-3 md:flex-row md:items-center md:justify-between md:gap-x-3 ">
+            <section className=" flex flex-col  gap-y-3 md:flex-row md:items-center md:justify-between md:gap-x-3 grow-0">
               <SelectedSection
                 selectOptions={selectOptions}
                 breedOptions={breedOptions}
@@ -138,7 +138,7 @@ const Home = () => {
               <LoaderSpinner />
             </div>
           ) : images?.length > 0 ? (
-            <div className="min-h-full">
+            <div className="flex flex-col">
               <MasonryGallery
                 photos={images}
                 favoriteBtn={favoriteBtn}
